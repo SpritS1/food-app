@@ -16,6 +16,7 @@
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/native": "^6.0.2",
     "@tamagui/config": "^1.76.0",
+    "@tamagui/lucide-icons": "^1.76.0",
     "expo": "~49.0.15",
     "expo-linking": "~5.0.2",
     "expo-router": "^2.0.0",

@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { YStack, Text, XStack, Button, Input } from "tamagui";
 import { FontAwesome } from "@expo/vector-icons";
+import { Settings2 } from "@tamagui/lucide-icons";
 
 export default function ClientHomeScreen() {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -34,12 +35,8 @@ export default function ClientHomeScreen() {
           </Text>
 
           <XStack space="$4">
-            <Input placeholder="Szukaj..." flex={1} />
-            <Button
-              circular
-              icon={<FontAwesome name="filter" size={18} />}
-              color="orange"
-            />
+            <Input placeholder="Szukaj..." flex={1} color="orange" />
+            <Button circular icon={Settings2} color="orange" />
           </XStack>
           {/* <View style={styles.searchbarContainer}>
             <Searchbar

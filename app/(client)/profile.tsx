@@ -1,19 +1,85 @@
 import { StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  Button,
+  ListItem,
+  Separator,
+  Stack,
+  Text,
+  YGroup,
+  YStack,
+} from "tamagui";
+import { Image, Settings, Star, User } from "@tamagui/lucide-icons";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
-import { Text, View } from "../../components/Themed";
+// import { useAuth0 } from "react-native-auth0";
 
 export default function TabTwoScreen() {
+  // const { authorize } = useAuth0();
+
+  // const onPress = async () => {
+  //   try {
+  //     await authorize();
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <SafeAreaView>
+      <YStack space="$4">
+        <YStack space="$4" padding="$4">
+          <Stack space="$2">
+            <Text fontSize="$8">Twoje konto</Text>
+            <Text fontSize="$5">
+              Zaloguj się aby móc korzystać z wszystkich funkcji aplikacji
+            </Text>
+          </Stack>
+          <Button color="orange">Zaloguj się</Button>
+        </YStack>
+
+        <YGroup>
+          <Separator />
+
+          <YGroup.Item>
+            <ListItem
+              color="orange"
+              hoverTheme
+              pressTheme
+              icon={User}
+              title="Dane personalne"
+              size="$5"
+            />
+          </YGroup.Item>
+          <YGroup.Item>
+            <ListItem
+              hoverTheme
+              pressTheme
+              icon={Star}
+              title="Moje opinie"
+              size="$5"
+            />
+          </YGroup.Item>
+          <YGroup.Item>
+            <ListItem
+              hoverTheme
+              pressTheme
+              icon={Image}
+              title="Moje zdjęcia"
+              size="$5"
+            />
+          </YGroup.Item>
+          <YGroup.Item>
+            <ListItem
+              size="$5"
+              hoverTheme
+              pressTheme
+              icon={Settings}
+              title="Ustawienia"
+            />
+          </YGroup.Item>
+          <Separator />
+        </YGroup>
+      </YStack>
+    </SafeAreaView>
   );
 }
 
