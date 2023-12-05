@@ -10,19 +10,9 @@ import {
   YStack,
 } from "tamagui";
 import { Image, Settings, Star, User } from "@tamagui/lucide-icons";
-
-// import { useAuth0 } from "react-native-auth0";
+import { Link } from "expo-router";
 
 export default function TabTwoScreen() {
-  // const { authorize } = useAuth0();
-
-  // const onPress = async () => {
-  //   try {
-  //     await authorize();
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
   return (
     <SafeAreaView>
       <YStack space="$4">
@@ -33,7 +23,9 @@ export default function TabTwoScreen() {
               Zaloguj się aby móc korzystać z wszystkich funkcji aplikacji
             </Text>
           </Stack>
-          <Button color="orange">Zaloguj się</Button>
+          <Link href="/sign-in" asChild>
+            <Button color="orange">Zaloguj się lub zarejestruj</Button>
+          </Link>
         </YStack>
 
         <YGroup>

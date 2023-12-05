@@ -13,6 +13,8 @@ import "@tamagui/core/reset.css";
 import { TamaguiProvider } from "tamagui";
 
 import config from "../tamagui.config";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { AuthProvider } from "../contexts/AuthContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -55,20 +57,21 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const queryClient = new QueryClient();
 
   return (
-    <TamaguiProvider
-      config={config}
-      defaultTheme={colorScheme === "dark" ? "dark" : "light"}
-    >
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(client)" options={{ headerShown: false }} />
-          {/* <Stack.Screen name="(owner)" options={{ headerShown: false }} /> */}
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack>
+    <TamaguiProvider config={config} defaultTheme="dark">
+      <ThemeProvider value={DarkTheme}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="(client)" options={{ headerShown: false }} />
+              <Stack.Screen name="(owner)" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            </Stack>
+          </AuthProvider>
+        </QueryClientProvider>
       </ThemeProvider>
     </TamaguiProvider>
   );

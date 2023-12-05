@@ -15,7 +15,7 @@ const StartScreen = (props: Props) => {
   };
 
   const handleRestaurantOwnerPress = () => {
-    // router.replace("/(owner)");
+    router.replace("/(owner)");
   };
 
   return (
