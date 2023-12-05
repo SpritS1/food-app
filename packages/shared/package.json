@@ -1,0 +1,19 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "Food app shared library",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Mateusz Penkala",
+  "license": "ISC",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "devDependencies": {
+    "typescript": "^5.3.2"
+  }
+}

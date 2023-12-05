@@ -1,0 +1,20 @@
+{
+  "name": "food-app",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "watch:shared": "cd packages/shared && npx tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpritS1/food-app.git"
+  },
+  "author": "Mateusz Penkala",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SpritS1/food-app/issues"
+  },
+  "homepage": "https://github.com/SpritS1/food-app#readme"
+}
