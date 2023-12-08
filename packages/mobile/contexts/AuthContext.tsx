@@ -144,7 +144,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = async () => setAuthToken(null);
+  const logout = async () => {
+    setAuthToken(null);
+    await SecureStore.deleteItemAsync("authToken");
+  };
 
   const contextValue: AuthContextProps = {
     authToken,

@@ -26,7 +26,7 @@ export default function OwnerLayout() {
           headerShown: false,
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <Ionicons name="restaurant" size={24} color={color} />
+            <Ionicons name="home" size={24} color={color} />
           ),
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -44,13 +44,14 @@ export default function OwnerLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="search"
+      <Tabs.Screen
+        name="profile"
         options={{
-          title: "Szukaj",
-          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          title: "Profile",
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerShown: false,
         }}
-      /> */}
+      />
     </Tabs>
   );
 }
