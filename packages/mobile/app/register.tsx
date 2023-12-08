@@ -88,9 +88,7 @@ const Register = () => {
 
               <Button
                 color="orange"
-                onPress={
-                  handleSubmit as unknown as (e: GestureResponderEvent) => void
-                }
+                onPress={handleSubmit}
                 disabled={isSubmitting}
               >
                 Sign In

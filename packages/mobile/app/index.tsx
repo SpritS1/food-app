@@ -1,6 +1,5 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Button, Image, YStack, Stack } from "tamagui";
 import { router } from "expo-router";
@@ -15,7 +14,7 @@ const StartScreen = (props: Props) => {
   };
 
   const handleRestaurantOwnerPress = () => {
-    router.replace("/(owner)");
+    router.replace("/(business-auth)/email-check");
   };
 
   return (
@@ -41,15 +40,16 @@ const StartScreen = (props: Props) => {
             onPress={handleClientPress}
             icon={<FontAwesome name="user" size={24} />}
           >
-            Client
+            Regular Client
           </Button>
+
           <Button
             icon={<FontAwesome name="briefcase" size={24} />}
             color="orange"
             width={"100%"}
             onPress={handleRestaurantOwnerPress}
           >
-            Restaurant Owner
+            Business Client
           </Button>
         </YStack>
       </YStack>

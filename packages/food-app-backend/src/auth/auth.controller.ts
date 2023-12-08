@@ -10,6 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { AccountType } from '../../../shared/dist/src/types';
+import { LoginDTO } from '../../../shared/src/dtos/LoginDTO';
 
 @Controller('auth')
 export class AuthController {
@@ -20,13 +21,16 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Get('check-email')
-  async checkEmail(@Query('email') email: string): Promise<boolean> {
-    return Boolean(await this.userService.findOne(email));
+  async checkEmail(
+    @Query('email') email: string,
+    @Query('accountType') accountType: AccountType,
+  ): Promise<boolean> {
+    return Boolean(await this.userService.findOne(email, accountType));
   }
 
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.email, signInDto.password);
+  signIn(@Body() loginDto: LoginDTO) {
+    return this.authService.signIn(loginDto);
   }
 
   @Post('register')
@@ -34,7 +38,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('accountType') accountType: AccountType,
-  ): Promise<void> {
+  ): Promise<{ accessToken: string }> {
     return this.authService.register(email, password, accountType);
   }
 }
