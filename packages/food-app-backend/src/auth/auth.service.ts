@@ -28,16 +28,17 @@ export class AuthService {
     password,
   }: LoginDTO): Promise<AuthResponse> {
     const user = await this.usersService.findOne(email, accountType);
-    console.log(user);
 
-    console.log(password);
     if (!user) throw new UnauthorizedException();
 
-    if (!bcrypt.compare(password, user.password)) {
-      throw new UnauthorizedException();
-    }
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
-    const payload = { email: user.email };
+    if (!isPasswordCorrect) throw new UnauthorizedException();
+
+    const payload: AuthTokenPayload = {
+      email: user.email,
+      accountType: user.accountType,
+    };
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
@@ -70,7 +71,7 @@ export class AuthService {
       const accessToken = await this.jwtService.signAsync(payload);
 
       return {
-        accessToken: accessToken,
+        accessToken,
       };
     } catch (error) {
       console.error('Error during user registration:', error);

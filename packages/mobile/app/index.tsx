@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Button, Image, YStack, Stack } from "tamagui";
-import { router } from "expo-router";
+import { SplashScreen as ExpoSplashScreen, router } from "expo-router";
 import Svg from "../assets/undraw_breakfast_psiw.svg";
 import { FontAwesome } from "@expo/vector-icons";
+import SplashScreen from "../components/SplashScreen";
+import { useAuth } from "../contexts/AuthContext";
 
 type Props = {};
 
 const StartScreen = (props: Props) => {
+  const [appIsReady, setAppIsReady] = React.useState<boolean>(false);
+  const { initialized, getUserData } = useAuth();
+
+  const onLayoutRootView = useCallback(async () => {
+    if (initialized) {
+      const data = getUserData();
+
+      if (data?.accountType === "business") router.replace("/(owner)");
+      else if (data?.accountType === "regular") router.replace("/(client)");
+      ExpoSplashScreen.hideAsync();
+    }
+  }, [initialized]);
+
   const handleClientPress = () => {
     router.replace("/(client)");
   };
@@ -17,8 +32,10 @@ const StartScreen = (props: Props) => {
     router.replace("/(business-auth)/email-check");
   };
 
+  if (!initialized) return <SplashScreen />;
+
   return (
-    <SafeAreaView>
+    <SafeAreaView onLayout={onLayoutRootView}>
       <YStack space="$8" padding="$4" justifyContent="center" height={"100%"}>
         <Stack alignItems="center">
           <Svg height={150} />

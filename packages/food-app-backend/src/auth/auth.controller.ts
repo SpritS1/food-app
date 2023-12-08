@@ -28,6 +28,7 @@ export class AuthController {
     return Boolean(await this.userService.findOne(email, accountType));
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() loginDto: LoginDTO) {
     return this.authService.signIn(loginDto);

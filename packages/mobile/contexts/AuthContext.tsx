@@ -19,6 +19,7 @@ interface AuthContextProps {
   logout: () => Promise<void>;
   checkEmail: (email: string, accountType: AccountType) => Promise<boolean>;
   getUserData: () => AuthTokenPayload | null;
+  initialized: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -41,6 +42,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   const getUserData = () => {
     if (!authToken) return null;
@@ -56,6 +58,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } catch (error) {
         console.error("Error retrieving auth token:", error);
       }
+
+      setInitialized(true);
     };
 
     getAuthToken();
@@ -99,11 +103,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const login: (values: LoginValues) => Promise<Boolean> = async (
+  const login: (values: LoginValues) => Promise<boolean> = async (
     values: LoginValues
   ) => {
     try {
-      const response = await axios.post(
+      const response = await axios.post<AuthResponse>(
         `${process.env.EXPO_PUBLIC_API_URL}/auth/login`,
         values
       );
@@ -113,7 +117,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      saveAuthToken(response.data.token);
+      console.log(response.data);
+      saveAuthToken(response.data.accessToken);
       return true;
     } catch (error) {
       console.error("Sign-in failed", error);
@@ -122,6 +127,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  // Dodać zwracanie wartosci boolean i obsluzyc bledy na froncie
   const register = async (values: RegisterValues) => {
     try {
       const response = await axios.post<AuthResponse>(
@@ -147,6 +153,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     checkEmail,
     getUserData,
+    initialized,
   };
 
   return (

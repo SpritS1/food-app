@@ -27,9 +27,12 @@ const BusinessLogin = () => {
 
   const handleSignIn = async (values: LoginValues) => {
     try {
-      await mutations.mutateAsync({ ...values, accountType: "business" });
+      const result = await mutations.mutateAsync({
+        ...values,
+        accountType: "business",
+      });
 
-      router.replace("/(owner)");
+      if (result) router.replace("/(owner)");
     } catch (error) {
       console.error("Sign-in failed", error);
     }
