@@ -11,15 +11,16 @@ import { useAuth } from "../contexts/AuthContext";
 type Props = {};
 
 const StartScreen = (props: Props) => {
-  const [appIsReady, setAppIsReady] = React.useState<boolean>(false);
-  const { initialized, getUserData } = useAuth();
+  // const [appIsReady, setAppIsReady] = React.useState<boolean>(false);
+  const { initialized, authToken } = useAuth();
 
   const onLayoutRootView = useCallback(async () => {
     if (initialized) {
-      const data = getUserData();
+      console.log(`authToken: ${authToken}`);
+      if (authToken) router.replace("/(owner)");
 
-      if (data?.accountType === "business") router.replace("/(owner)");
-      else if (data?.accountType === "regular") router.replace("/(client)");
+      // if (userData?.accountType === "business") router.replace("/(owner)");
+      // else if (userData?.accountType === "regular") router.replace("/(client)");
       ExpoSplashScreen.hideAsync();
     }
   }, [initialized]);
@@ -29,7 +30,7 @@ const StartScreen = (props: Props) => {
   };
 
   const handleRestaurantOwnerPress = () => {
-    router.replace("/(business-auth)/email-check");
+    router.replace("/(business-auth)/create-account");
   };
 
   if (!initialized) return <SplashScreen />;

@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from "axios";
+import axios, { AxiosError, HttpStatusCode } from "axios";
 import {
   ReactNode,
   createContext,
@@ -15,10 +15,10 @@ import AuthTokenPayload from "../../shared/dist/src/types/AuthTokenPayload";
 interface AuthContextProps {
   authToken: string | null;
   login: (values: LoginValues) => Promise<boolean>;
-  register: (values: RegisterValues) => Promise<void>;
+  register: (values: RegisterValues) => Promise<boolean>;
   logout: () => Promise<void>;
   checkEmail: (email: string, accountType: AccountType) => Promise<boolean>;
-  getUserData: () => AuthTokenPayload | null;
+  userData: AuthTokenPayload | null;
   initialized: boolean;
 }
 
@@ -42,28 +42,58 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<AuthTokenPayload | null>(null);
   const [initialized, setInitialized] = useState<boolean>(false);
 
-  const getUserData = () => {
-    if (!authToken) return null;
-    return jwtDecode<AuthTokenPayload>(authToken);
+  const setTokenStates = (token: string) => {
+    console.log(`Setting token states to ${token}`);
+    setAuthToken(token);
+    setUserData(jwtDecode<AuthTokenPayload>(token));
+  };
+
+  const clearTokenStates = () => {
+    console.log("Clearing token states");
+    setAuthToken(null);
+    setUserData(null);
+  };
+  const saveAuthToken = async (token: string) => {
+    try {
+      setTokenStates(token);
+      await SecureStore.setItemAsync("authToken", token);
+    } catch (error) {
+      console.error("Error saving auth token:", error);
+    }
   };
 
   useEffect(() => {
-    const getAuthToken = async () => {
+    const initializeAuth = async () => {
       try {
         const tokenFromStorage = await SecureStore.getItemAsync("authToken");
-        setAuthToken(tokenFromStorage);
-        console.log(`Token from storage: ${tokenFromStorage}`);
+        if (tokenFromStorage) {
+          setTokenStates(tokenFromStorage);
+        }
       } catch (error) {
-        console.error("Error retrieving auth token:", error);
+        console.error("Error initializing auth token:", error);
+      } finally {
+        setInitialized(true);
       }
-
-      setInitialized(true);
     };
 
-    getAuthToken();
+    initializeAuth();
   }, []);
+
+  // Set the Authorization header for all requests
+  axios.interceptors.request.use(
+    (config) => {
+      if (authToken) {
+        config.headers["Authorization"] = `Bearer ${authToken}`;
+      }
+      return config;
+    },
+    (error: AxiosError) => {
+      return Promise.reject(error);
+    }
+  );
 
   const checkEmail: (
     email: string,
@@ -94,31 +124,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const saveAuthToken = async (token: string) => {
-    try {
-      setAuthToken(token);
-      await SecureStore.setItemAsync("authToken", token);
-    } catch (error) {
-      console.error("Error saving auth token:", error);
-    }
-  };
-
   const login: (values: LoginValues) => Promise<boolean> = async (
     values: LoginValues
   ) => {
     try {
-      const response = await axios.post<AuthResponse>(
-        `${process.env.EXPO_PUBLIC_API_URL}/auth/login`,
-        values
-      );
-
+      const response = await axios.post<AuthResponse>(`/auth/login`, values);
+      console.log(response);
       if (response.status !== HttpStatusCode.Ok) {
         alert("Sign-in failed. Please try again.");
         return false;
       }
 
-      console.log(response.data);
-      saveAuthToken(response.data.accessToken);
+      setTokenStates(response.data.access_token);
+      saveAuthToken(response.data.access_token);
       return true;
     } catch (error) {
       console.error("Sign-in failed", error);
@@ -128,7 +146,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Dodać zwracanie wartosci boolean i obsluzyc bledy na froncie
-  const register = async (values: RegisterValues) => {
+  const register: (values: RegisterValues) => Promise<boolean> = async (
+    values
+  ) => {
     try {
       const response = await axios.post<AuthResponse>(
         `${process.env.EXPO_PUBLIC_API_URL}/auth/register`,
@@ -136,27 +156,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (response.status === HttpStatusCode.Created) {
-        saveAuthToken(response.data.accessToken);
+        saveAuthToken(response.data.access_token);
+        return true;
       }
+
+      return false;
     } catch (error) {
       console.error("Account register failed", error);
-      alert("Account register failed. Please try again.");
+      alert(`Account register failed. Please try again`);
+      return false;
     }
   };
 
   const logout = async () => {
-    setAuthToken(null);
+    clearTokenStates();
     await SecureStore.deleteItemAsync("authToken");
   };
 
   const contextValue: AuthContextProps = {
     authToken,
+    userData,
+    initialized,
     login,
     logout,
     register,
     checkEmail,
-    getUserData,
-    initialized,
   };
 
   return (

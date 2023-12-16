@@ -17,11 +17,14 @@ const Profile = (props: Props) => {
 
   return (
     <SafeAreaView>
-      <YStack padding="$4">
-        <YStack>
-          <Text fontSize="$6">Hello,</Text>
-          <Text fontSize="$8">{auth.getUserData()?.email}!</Text>
+      <YStack space="$4">
+        <YStack space="$4" padding="$4">
+          <YStack space="$2">
+            <Text fontSize="$6">Hello,</Text>
+            <Text fontSize="$8">{auth.userData?.email}! </Text>
+          </YStack>
         </YStack>
+
         <YGroup>
           <Separator />
 

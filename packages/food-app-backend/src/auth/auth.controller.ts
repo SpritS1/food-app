@@ -1,16 +1,17 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
-  Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { AccountType } from '../../../shared/dist/src/types';
-import { LoginDTO } from '../../../shared/src/dtos/LoginDTO';
+import { AuthGuard } from '@nestjs/passport';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,21 +20,16 @@ export class AuthController {
     private userService: UsersService,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
-  @Get('check-email')
-  async checkEmail(
-    @Query('email') email: string,
-    @Query('accountType') accountType: AccountType,
-  ): Promise<boolean> {
-    return Boolean(await this.userService.findOne(email, accountType));
-  }
-
+  @Public()
+  @UseGuards(AuthGuard('local'))
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() loginDto: LoginDTO) {
-    return this.authService.signIn(loginDto);
+  async login(@Req() req) {
+    const res = await this.authService.login(req.user);
+    return res;
   }
 
+  @Public()
   @Post('register')
   async register(
     @Body('email') email: string,

@@ -9,7 +9,7 @@ export default function OwnerHomeScreen() {
   return (
     <SafeAreaView>
       <YStack padding="$4" space="$4">
-        <Text fontSize="$8">Witaj {auth.getUserData()?.email}!</Text>
+        <Text fontSize="$8">Witaj {auth.userData?.email}!</Text>
       </YStack>
     </SafeAreaView>
   );

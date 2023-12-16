@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
@@ -11,8 +6,8 @@ import { User } from 'src/schemas/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AccountType, AuthResponse } from '../../../shared/src/types';
-import { LoginDTO } from '../../../shared/src/dtos/LoginDTO';
 import AuthTokenPayload from '../../../shared/src/types/AuthTokenPayload';
+import { Role } from 'src/enums/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -22,26 +17,24 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn({
-    email,
-    accountType,
-    password,
-  }: LoginDTO): Promise<AuthResponse> {
-    const user = await this.usersService.findOne(email, accountType);
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findOne(email);
+    if (user && (await bcrypt.compare(pass, user.password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
 
-    if (!user) throw new UnauthorizedException();
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordCorrect) throw new UnauthorizedException();
-
+  async login(user: any) {
     const payload: AuthTokenPayload = {
-      email: user.email,
-      accountType: user.accountType,
+      userId: user._doc._id,
+      email: user._doc.email,
     };
 
     return {
-      accessToken: await this.jwtService.signAsync(payload),
+      access_token: this.jwtService.sign(payload),
     };
   }
 
@@ -51,22 +44,27 @@ export class AuthService {
     accountType: AccountType,
   ): Promise<AuthResponse> {
     try {
-      if (await this.userModel.findOne({ email, accountType })) {
+      if (await this.userModel.findOne({ email })) {
         throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
+
+      // unify roles and accountType
+      const roles: Role[] =
+        accountType === 'regular' ? [Role.User] : [Role.BusinessOwner];
+
       const newUser = new this.userModel({
         email,
         password: hashedPassword,
-        accountType,
+        roles,
       });
 
       await newUser.save();
 
       const payload: AuthTokenPayload = {
+        userId: newUser._id.toString(),
         email: newUser.email,
-        accountType: newUser.accountType,
       };
       const accessToken = await this.jwtService.signAsync(payload);
 

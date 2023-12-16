@@ -5,7 +5,7 @@ import { Button, Input, Text, YStack } from "tamagui";
 import { RegisterValues, useAuth } from "../../contexts/AuthContext";
 import * as Yup from "yup";
 import { useMutation } from "react-query";
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 
 type Props = {};
 
@@ -30,20 +30,14 @@ const CreateAccount = (props: Props) => {
   );
 
   const handleSubmit = async (values: FormValues) => {
-    try {
-      await mutateAsync(values);
-
-      router.replace("/(owner)");
-    } catch (error) {
-      console.error("Create account failed", error);
-      alert("Create account failed");
-    }
+    const accountCreated = await mutateAsync(values);
+    if (accountCreated) router.replace("/(owner)");
   };
 
   return (
     <SafeAreaView>
-      <YStack>
-        <Text fontSize="$8">Create Account</Text>
+      <YStack paddingHorizontal="$4" gap="$4" height="100%">
+        <Text fontSize={"$10"}>Create Account</Text>
         <Formik
           initialValues={{
             email: email as string,
@@ -61,7 +55,7 @@ const CreateAccount = (props: Props) => {
             errors,
             touched,
           }) => (
-            <YStack>
+            <YStack gap="$4">
               <Input
                 placeholder="Email"
                 inputMode="email"
@@ -95,10 +89,16 @@ const CreateAccount = (props: Props) => {
                 <Text color="red">{errors.confirmPassword}</Text>
               )}
 
-              <Button onPress={handleSubmit}>Create Account</Button>
+              <Button onPress={handleSubmit} color="orange">
+                Create Account
+              </Button>
             </YStack>
           )}
         </Formik>
+        <Text>
+          Already have an account?{" "}
+          <Link href="/(business-auth)/login">Sign in</Link>
+        </Text>
       </YStack>
     </SafeAreaView>
   );

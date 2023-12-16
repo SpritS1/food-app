@@ -1,13 +1,8 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
 import "@tamagui/core/reset.css";
 
 import { TamaguiProvider } from "tamagui";
@@ -15,6 +10,7 @@ import { TamaguiProvider } from "tamagui";
 import config from "../tamagui.config";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "../contexts/AuthContext";
+import axios from "axios";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,6 +24,8 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({

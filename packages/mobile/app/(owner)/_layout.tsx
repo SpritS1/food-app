@@ -44,6 +44,18 @@ export default function OwnerLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="restaurants"
+        options={{
+          title: "Restaurants",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="restaurant" size={24} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+
       <Tabs.Screen
         name="profile"
         options={{
