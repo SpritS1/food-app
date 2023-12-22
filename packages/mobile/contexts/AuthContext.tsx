@@ -129,7 +129,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ) => {
     try {
       const response = await axios.post<AuthResponse>(`/auth/login`, values);
-      console.log(response);
       if (response.status !== HttpStatusCode.Ok) {
         alert("Sign-in failed. Please try again.");
         return false;

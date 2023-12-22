@@ -29,7 +29,6 @@ export class RestaurantController {
     return this.restaurantService.findOne(id);
   }
 
-  // @UseGuards(OwnershipGuard)
   @Roles(Role.BusinessOwner)
   @Post()
   create(@Body() createRestaurantDto: CreateRestaurantDto, @Req() req) {
