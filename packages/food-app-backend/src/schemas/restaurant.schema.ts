@@ -23,6 +23,9 @@ export class Restaurant {
   @Prop({ required: true })
   cuisine: string[];
 
+  @Prop({ required: true })
+  images: string[];
+
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   owner: Types.ObjectId;
 }

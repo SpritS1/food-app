@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   Req,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -14,6 +17,8 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { ObjectId } from 'mongoose';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('restaurant')
 export class RestaurantController {
@@ -30,12 +35,24 @@ export class RestaurantController {
   }
 
   @Roles(Role.BusinessOwner)
+  @UseInterceptors(FileInterceptor('mainImage'))
   @Post()
-  create(@Body() createRestaurantDto: CreateRestaurantDto, @Req() req) {
+  create(
+    @UploadedFile() mainImage: Express.Multer.File,
+    @Body() createRestaurantDto: CreateRestaurantDto,
+    @Req() req,
+  ) {
     const userId: ObjectId = req.user.userId;
-    return this.restaurantService.create(createRestaurantDto, userId);
+
+    return this.restaurantService.create(
+      createRestaurantDto,
+      userId,
+      mainImage,
+    );
   }
 
+  @Roles(Role.BusinessOwner)
+  @UseGuards(OwnershipGuard)
   @Patch(':id')
   update(
     @Param('id') id: ObjectId,

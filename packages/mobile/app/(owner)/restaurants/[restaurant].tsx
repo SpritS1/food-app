@@ -99,6 +99,7 @@ const RestaurantDetails = (props: Props) => {
       {data && (
         <EditRestaurantModal
           restaurantName={data?.name}
+          imageUrl={`${process.env.EXPO_PUBLIC_API_URL}${data?.images[0]}`}
           visible={editModalVisible}
           onHide={() => setEditModalVisible(false)}
         />
@@ -108,9 +109,8 @@ const RestaurantDetails = (props: Props) => {
         <ScrollView position="relative">
           <Image
             source={{
-              uri: require("../../../assets/demoImages/restaurant_profile.jpg"),
-              // width: 100,
-              height: 300,
+              uri: `${process.env.EXPO_PUBLIC_API_URL}${data?.images[0]}`,
+              height: 250,
             }}
           />
           <Stack backgroundColor={"$background"} padding="$4" space="$4">

@@ -7,4 +7,5 @@ export type Restaurant = {
   phone: string;
   cuisine: string[];
   owner: string;
+  images: string[];
 };

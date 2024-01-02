@@ -9,6 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { OwnershipGuard } from './auth/guards/ownership.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -23,6 +25,10 @@ import { OwnershipGuard } from './auth/guards/ownership.guard';
     UsersModule,
     RestaurantModule,
     JwtModule.register({ secret: process.env.JWT_SECRET }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'uploads'), // Set the static files location
+      serveRoot: '/uploads', // Map the files under a route
+    }),
   ],
   controllers: [AppController],
   providers: [

@@ -15,9 +15,15 @@ type Props = {
   visible: boolean;
   onHide: () => void;
   restaurantName: string;
+  imageUrl: string;
 };
 
-const EditRestaurantModal = ({ visible, onHide, restaurantName }: Props) => {
+const EditRestaurantModal = ({
+  visible,
+  onHide,
+  restaurantName,
+  imageUrl,
+}: Props) => {
   return (
     <Modal
       transparent
@@ -33,7 +39,7 @@ const EditRestaurantModal = ({ visible, onHide, restaurantName }: Props) => {
               <Stack justifyContent="center" alignItems="center" space="$6">
                 <Image
                   source={{
-                    uri: require("../assets/demoImages/restaurant_profile.jpg"),
+                    uri: imageUrl,
                     width: 200,
                     height: 200,
                   }}

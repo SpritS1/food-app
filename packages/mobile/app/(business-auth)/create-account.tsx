@@ -89,7 +89,7 @@ const CreateAccount = (props: Props) => {
                 <Text color="red">{errors.confirmPassword}</Text>
               )}
 
-              <Button onPress={handleSubmit} color="orange">
+              <Button onPress={handleSubmit as any} color="orange">
                 Create Account
               </Button>
             </YStack>
