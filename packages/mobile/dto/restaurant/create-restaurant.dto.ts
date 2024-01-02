@@ -6,6 +6,6 @@ export interface CreateRestaurantDto {
   description: string;
   phone: string;
   email: string;
-  cuisine: string[];
+  cuisine: string;
   mainImage: ImagePickerAsset;
 }

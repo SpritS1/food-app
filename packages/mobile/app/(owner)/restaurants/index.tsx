@@ -69,6 +69,7 @@ const restaurants = (props: Props) => {
               Add restaurant
             </Button>
           </XStack>
+
           <ScrollView
             padding="$4"
             space="$4"

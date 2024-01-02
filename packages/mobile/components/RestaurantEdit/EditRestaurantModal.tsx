@@ -1,15 +1,14 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import React from "react";
+import React, { useState } from "react";
 import {
-  FlatList,
   Modal,
   SafeAreaView,
   StyleSheet,
-  TouchableHighlight,
   TouchableOpacity,
 } from "react-native";
 import { Image, ScrollView, Stack, Text, YStack, Button } from "tamagui";
+import MenuItem from "./MenuItem";
 
 type Props = {
   visible: boolean;
@@ -24,6 +23,9 @@ const EditRestaurantModal = ({
   restaurantName,
   imageUrl,
 }: Props) => {
+  const [editDataModalVisible, setEditDataModalVisible] = useState(false);
+  const [editImagesModalVisible, setEditImagesModalVisible] = useState(false);
+
   return (
     <Modal
       transparent
@@ -49,53 +51,11 @@ const EditRestaurantModal = ({
                 <Text fontSize={"$8"}>{restaurantName}</Text>
               </Stack>
 
-              <TouchableOpacity>
-                <Stack
-                  flexDirection="row"
-                  space="$4"
-                  alignItems="center"
-                  width={"100%"}
-                >
-                  <FontAwesome5
-                    name="edit"
-                    color="hsl(11, 0%, 70%)"
-                    size={20}
-                  />
-                  <Text fontSize={"$6"}>Edit data</Text>
-                </Stack>
-              </TouchableOpacity>
-
-              <TouchableOpacity>
-                <Stack
-                  flexDirection="row"
-                  space="$4"
-                  alignItems="center"
-                  width={"100%"}
-                >
-                  <FontAwesome5
-                    name="utensils"
-                    color="hsl(11, 0%, 70%)"
-                    size={20}
-                  />
-                  <Text fontSize={"$6"}>Edit menu</Text>
-                </Stack>
-              </TouchableOpacity>
-
-              <TouchableOpacity>
-                <Stack
-                  flexDirection="row"
-                  space="$4"
-                  alignItems="center"
-                  width={"100%"}
-                >
-                  <FontAwesome5
-                    name="eye-slash"
-                    color="hsl(11, 0%, 70%)"
-                    size={20}
-                  />
-                  <Text fontSize={"$6"}>Hide</Text>
-                </Stack>
-              </TouchableOpacity>
+              <MenuItem text="Edit data" icon="edit" />
+              <MenuItem text="Edit images" icon="images" />
+              <MenuItem text="Edit menu" icon="utensils" />
+              <MenuItem text="Hide" icon="eye-slash" />
+              <MenuItem text="Delete" icon="trash" />
             </ScrollView>
 
             <TouchableOpacity onPress={onHide}>

@@ -15,8 +15,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Restaurant } from "../../../models/restaurant";
 import axios from "axios";
 import { useQuery } from "react-query";
-import EditRestaurantModal from "../../../components/EditRestaurantModal";
+import EditRestaurantModal from "../../../components/RestaurantEdit/EditRestaurantModal";
 import { Dimensions } from "react-native";
+import Divider from "../../../components/Divider";
+import InfoItem from "../../../components/RestaurantView/InfoItem";
 
 type Props = {};
 
@@ -71,8 +73,6 @@ const RestaurantDetails = (props: Props) => {
                 <FontAwesome5 name="chevron-left" size={24} color="white" />
               </Stack>
             </TouchableOpacity>
-
-            <Text fontSize="$8">{data?.name}</Text>
           </Stack>
 
           <TouchableOpacity onPress={handleEditClick}>
@@ -123,60 +123,36 @@ const RestaurantDetails = (props: Props) => {
               />
             ))}
           </ScrollView>
+
           <Stack backgroundColor={"$background"} padding="$4" space="$4">
-            <Text fontSize="$8">{data?.name}</Text>
-            <Stack flexDirection="row" space="$2" alignItems="center">
-              <Stack
-                backgroundColor="$orange5"
-                padding="$2"
-                width={"$2"}
-                borderRadius={"$2"}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <FontAwesome5 name="map-marker-alt" size={16} color="orange" />
-              </Stack>
-              <Text>{data?.address}</Text>
+            <Text fontSize="$9">{data?.name}</Text>
+
+            <InfoItem text={data?.address} iconName="map-marker-alt" />
+            <InfoItem text={data?.cuisine.join(", ")} iconName="utensils" />
+            <InfoItem text={"Average price 85 $"} iconName="money-bill" />
+
+            <Divider />
+
+            <Stack space="$2">
+              <Text fontSize="$6" fontWeight="bold">
+                About
+              </Text>
+              <Text>{data?.description}</Text>
             </Stack>
 
-            <Stack flexDirection="row" space="$2" alignItems="center">
-              <Stack
-                backgroundColor="$orange5"
-                padding="$2"
-                width={"$2"}
-                borderRadius={"$2"}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <FontAwesome5 name="utensils" size={16} color="orange" />
-              </Stack>
-              <Text>{data?.cuisine.join(", ")}</Text>
-            </Stack>
+            <Divider />
 
-            <Stack flexDirection="row" space="$2" alignItems="center">
-              <Stack
-                backgroundColor="$orange5"
-                padding="$2"
-                width={"$2"}
-                borderRadius={"$2"}
-                justifyContent="center"
-                alignItems="center"
-              >
-                <FontAwesome5 name="money-bill" size={12} color="orange" />
-              </Stack>
-              <Text>Average price 85 $</Text>
+            <Stack space="$4">
+              <Text fontSize="$6" fontWeight="bold">
+                Contact
+              </Text>
+              <InfoItem text={data?.phone} iconName="phone" />
+              <InfoItem text={data?.email} iconName="envelope" />
             </Stack>
-
-            <Stack></Stack>
           </Stack>
         </ScrollView>
 
-        <Button
-          position="fixed"
-          bottom="$4"
-          theme={"orange"}
-          alignSelf="center"
-        >
+        <Button position="absolute" bottom="$4" right="$4" theme={"orange"}>
           Book a table
         </Button>
       </Theme>

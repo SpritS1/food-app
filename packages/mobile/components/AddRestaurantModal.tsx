@@ -10,6 +10,8 @@ import {
   XStack,
   Image,
   ScrollView,
+  TextArea,
+  View,
 } from "tamagui";
 import { CreateRestaurantDto } from "../dto/restaurant/create-restaurant.dto";
 import axios from "axios";
@@ -23,20 +25,21 @@ type Props = {
   onAddSuccess: () => void;
 };
 
+const cuisineRegex = /^[a-zA-Z]+(,\s*[a-zA-Z]+)*$/; // Regex for comma or space-separated words
+
 const restaurantSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   address: Yup.string().required("Address is required"),
   description: Yup.string().required("Description is required"),
   phone: Yup.string().required("Phone number is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  // cuisine: Yup.array()
-  //   .of(Yup.string())
-  //   .required("At least one cuisine type is required"),
-  cuisine: Yup.string().required("Cuisine is required"),
+  cuisine: Yup.string()
+    .matches(cuisineRegex, "Invalid cuisine format")
+    .required("Cuisine is required"),
 });
 
 const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
-  const { name, address, description, phone, email, mainImage } =
+  const { name, address, description, phone, email, mainImage, cuisine } =
     createRestaurantDto;
 
   const formData = new FormData();
@@ -46,6 +49,7 @@ const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
   formData.append("description", description);
   formData.append("phone", phone);
   formData.append("email", email);
+  formData.append("cuisine", cuisine);
 
   if (mainImage) {
     formData.append("mainImage", {
@@ -112,12 +116,11 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{ justifyContent: "center" }}
       >
         <ScrollView
-          flex={1}
-          backgroundColor="$background"
           height={"100%"}
+          backgroundColor="$background"
           padding="$4"
           space="$4"
         >
@@ -190,7 +193,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                   <Text color="$red10">{errors.address}</Text>
                 )}
 
-                <Input
+                <TextArea
                   onChangeText={handleChange("description")}
                   onBlur={handleBlur("description")}
                   value={values.description}
@@ -230,7 +233,11 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                   <Text theme={"red"}>{errors.cuisine}</Text>
                 )}
 
-                <Button onPress={handleSubmit as any} theme={"orange"}>
+                <Button
+                  onPress={handleSubmit as any}
+                  theme={"orange"}
+                  marginTop="auto"
+                >
                   Create restaurant
                 </Button>
               </YStack>
