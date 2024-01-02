@@ -17,6 +17,7 @@ import RestaurantCard from "../../../components/RestaurantCard";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Plus } from "@tamagui/lucide-icons";
 import AddRestaurantModal from "../../../components/AddRestaurantModal";
+import { RefreshControl } from "react-native";
 
 type Props = {};
 
@@ -43,6 +44,14 @@ const restaurants = (props: Props) => {
     () => fetchOwnedRestaurants(auth.userData?.userId)
   );
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, []);
+
   if (isLoading) return <Spinner size="large" theme="orange" />;
 
   return (
@@ -60,7 +69,13 @@ const restaurants = (props: Props) => {
               Add restaurant
             </Button>
           </XStack>
-          <ScrollView padding="$4" space="$4">
+          <ScrollView
+            padding="$4"
+            space="$4"
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             {data?.map((restaurant) => (
               <Link
                 href={`/(owner)/restaurants/${restaurant._id}`}

@@ -145,12 +145,18 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
 
           <Formik
             initialValues={{
-              name: "",
-              address: "",
-              description: "",
-              phone: "",
-              email: "",
-              cuisine: "",
+              name: "Kebab",
+              address: "Istanbul",
+              description: "Best kebab in town!",
+              phone: "123123123",
+              email: "mateuszpenkala@gmail.com",
+              cuisine: "French",
+              // name: "",
+              // address: "",
+              // description: "",
+              // phone: "",
+              // email: "",
+              // cuisine: "",
             }}
             validationSchema={restaurantSchema}
             onSubmit={handleSubmit as any}
