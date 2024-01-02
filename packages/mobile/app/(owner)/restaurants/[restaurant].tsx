@@ -8,18 +8,15 @@ import {
   Stack,
   Text,
   Theme,
-  YStack,
 } from "tamagui";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Restaurant } from "../../../models/restaurant";
 import axios from "axios";
 import { useQuery } from "react-query";
 import EditRestaurantModal from "../../../components/EditRestaurantModal";
+import { Dimensions } from "react-native";
 
 type Props = {};
 
@@ -47,6 +44,10 @@ const RestaurantDetails = (props: Props) => {
   const { data, isLoading, error } = useQuery<Restaurant>("restaurant", () =>
     fetchRestaurantData(restaurant as string)
   );
+
+  useEffect(() => {
+    console.log(`Restaurant details: ${data}`);
+  }, [data]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -107,12 +108,21 @@ const RestaurantDetails = (props: Props) => {
 
       <Theme name="dark">
         <ScrollView position="relative">
-          <Image
-            source={{
-              uri: `${process.env.EXPO_PUBLIC_API_URL}${data?.images[0]}`,
-              height: 250,
-            }}
-          />
+          <ScrollView horizontal maxHeight={250}>
+            {data?.images.map((image, index) => (
+              <Image
+                key={index}
+                source={{
+                  uri: `${process.env.EXPO_PUBLIC_API_URL}${image}`,
+                  width:
+                    data.images.length === 1
+                      ? Dimensions.get("window").width
+                      : Dimensions.get("window").width * 0.85,
+                  height: 250,
+                }}
+              />
+            ))}
+          </ScrollView>
           <Stack backgroundColor={"$background"} padding="$4" space="$4">
             <Text fontSize="$8">{data?.name}</Text>
             <Stack flexDirection="row" space="$2" alignItems="center">
