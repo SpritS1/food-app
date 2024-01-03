@@ -10,6 +10,9 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { OwnershipGuard } from './auth/guards/ownership.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { LocationModule } from './location/location.module';
+import { CuisineModule } from './cuisine/cuisine.module';
+import { CityModule } from './city/city.module';
 import * as path from 'path';
 
 @Module({
@@ -29,6 +32,9 @@ import * as path from 'path';
       rootPath: path.join(__dirname, '..', '..', '..', 'uploads'), // Set the static files location
       serveRoot: '/uploads', // Map the files under a routes
     }),
+    LocationModule,
+    CuisineModule,
+    CityModule,
   ],
   controllers: [AppController],
   providers: [

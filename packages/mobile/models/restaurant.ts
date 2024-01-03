@@ -1,3 +1,5 @@
+import { CuisineDTO } from "../../shared/src/dtos/CuisineDTO";
+
 export type Restaurant = {
   _id: string;
   name: string;
@@ -5,7 +7,7 @@ export type Restaurant = {
   address: string;
   email: string;
   phone: string;
-  cuisine: string[];
+  cuisine: CuisineDTO;
   owner: string;
   images: string[];
 };

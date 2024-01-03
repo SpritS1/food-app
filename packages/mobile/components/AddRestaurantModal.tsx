@@ -12,12 +12,18 @@ import {
   ScrollView,
   TextArea,
   View,
+  Stack,
 } from "tamagui";
 import { CreateRestaurantDto } from "../dto/restaurant/create-restaurant.dto";
 import axios from "axios";
 import { useMutation } from "react-query";
 import * as ImagePicker from "expo-image-picker";
 import { ImagePickerAsset } from "expo-image-picker";
+import useModal from "../hooks/useModal";
+import SearchLocationModal from "./SearchLocationModal";
+import SearchCuisineModal from "./SearchCuisineModal";
+import { CuisineDTO } from "../../shared/src/dtos/CuisineDTO";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 type Props = {
   visible: boolean;
@@ -25,7 +31,15 @@ type Props = {
   onAddSuccess: () => void;
 };
 
-const cuisineRegex = /^[a-zA-Z]+(,\s*[a-zA-Z]+)*$/; // Regex for comma or space-separated words
+interface FormValues {
+  name: string;
+  address: string;
+  description: string;
+  phone: string;
+  email: string;
+  cuisine: CuisineDTO;
+  mainImage: ImagePickerAsset;
+}
 
 const restaurantSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -33,9 +47,7 @@ const restaurantSchema = Yup.object().shape({
   description: Yup.string().required("Description is required"),
   phone: Yup.string().required("Phone number is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  cuisine: Yup.string()
-    .matches(cuisineRegex, "Invalid cuisine format")
-    .required("Cuisine is required"),
+  cuisine: Yup.object().required("Cuisine is required"),
 });
 
 const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
@@ -68,6 +80,18 @@ const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
 };
 
 const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
+  const {
+    visible: locationModalVisible,
+    hideModal: hideLocationModal,
+    showModal: showLocationModal,
+  } = useModal();
+
+  const {
+    visible: cuisineModalVisible,
+    hideModal: hideCuisineModal,
+    showModal: showCuisineModal,
+  } = useModal();
+
   const [image, setImage] = useState<ImagePickerAsset | null>(null);
 
   const pickImage = async () => {
@@ -92,7 +116,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
   });
 
   const handleSubmit = async (
-    values: CreateRestaurantDto,
+    values: FormValues,
     formikHelpers: FormikHelpers<CreateRestaurantDto>
   ) => {
     if (!image) {
@@ -100,7 +124,11 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
       return;
     }
 
-    mutation.mutate({ ...values, mainImage: image });
+    mutation.mutate({
+      ...values,
+      cuisine: values.cuisine._id,
+      mainImage: image,
+    });
 
     setImage(null);
     onHide();
@@ -147,20 +175,15 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
           </YStack>
 
           <Formik
-            initialValues={{
-              name: "Kebab",
-              address: "Istanbul",
-              description: "Best kebab in town!",
-              phone: "123123123",
-              email: "mateuszpenkala@gmail.com",
-              cuisine: "French",
-              // name: "",
-              // address: "",
-              // description: "",
-              // phone: "",
-              // email: "",
-              // cuisine: "",
-            }}
+            initialValues={
+              {
+                name: "Kebab",
+                address: "",
+                description: "Best kebab in town!",
+                phone: "123123123",
+                email: "mateuszpenkala@gmail.com",
+              } as FormValues
+            }
             validationSchema={restaurantSchema}
             onSubmit={handleSubmit as any}
           >
@@ -168,79 +191,94 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
               handleChange,
               handleBlur,
               handleSubmit,
+              setFieldValue,
               values,
               errors,
               touched,
             }) => (
-              <YStack space="$4">
-                <Input
-                  onChangeText={handleChange("name")}
-                  onBlur={handleBlur("name")}
-                  value={values.name}
-                  placeholder="Name"
+              <>
+                <SearchLocationModal
+                  visible={locationModalVisible}
+                  onHide={hideLocationModal}
+                  onSelect={(value) => setFieldValue("address", value)}
                 />
-                {touched.name && errors.name && (
-                  <Text color="$red10">{errors.name}</Text>
-                )}
 
-                <Input
-                  onChangeText={handleChange("address")}
-                  onBlur={handleBlur("address")}
-                  value={values.address}
-                  placeholder="Address"
+                <SearchCuisineModal
+                  visible={cuisineModalVisible}
+                  onHide={hideCuisineModal}
+                  onSelect={(value) => setFieldValue("cuisine", value)}
                 />
-                {touched.address && errors.address && (
-                  <Text color="$red10">{errors.address}</Text>
-                )}
 
-                <TextArea
-                  onChangeText={handleChange("description")}
-                  onBlur={handleBlur("description")}
-                  value={values.description}
-                  placeholder="Description"
-                />
-                {touched.description && errors.description && (
-                  <Text color="$red10">{errors.description}</Text>
-                )}
+                <YStack space="$4">
+                  <ScrollView horizontal space>
+                    <Button
+                      icon={<FontAwesome5 name="map-marker-alt" size={16} />}
+                      variant="outlined"
+                      borderColor={values.address ? "$green10" : undefined}
+                      onPress={showLocationModal}
+                    >
+                      {values.address || "City"}
+                    </Button>
 
-                <Input
-                  onChangeText={handleChange("phone")}
-                  onBlur={handleBlur("phone")}
-                  value={values.phone}
-                  placeholder="Phone"
-                />
-                {touched.phone && errors.phone && (
-                  <Text color="$red10">{errors.phone}</Text>
-                )}
+                    <Button
+                      icon={<FontAwesome5 name="utensils" size={16} />}
+                      variant="outlined"
+                      borderColor={values.cuisine ? "$green10" : undefined}
+                      onPress={showCuisineModal}
+                    >
+                      {values?.cuisine?.name || "Cuisine"}
+                    </Button>
+                  </ScrollView>
 
-                <Input
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                  placeholder="Email"
-                />
-                {touched.email && errors.email && (
-                  <Text color="$red10">{errors.email}</Text>
-                )}
+                  <Input
+                    onChangeText={handleChange("name")}
+                    onBlur={handleBlur("name")}
+                    value={values.name}
+                    placeholder="Name"
+                  />
+                  {touched.name && errors.name && (
+                    <Text color="$red10">{errors.name}</Text>
+                  )}
 
-                <Input
-                  onChangeText={handleChange("cuisine")}
-                  onBlur={handleBlur("cuisine")}
-                  value={values.cuisine}
-                  placeholder="Cuisine (comma separated)"
-                />
-                {touched.cuisine && errors.cuisine && (
-                  <Text theme={"red"}>{errors.cuisine}</Text>
-                )}
+                  <TextArea
+                    onChangeText={handleChange("description")}
+                    onBlur={handleBlur("description")}
+                    value={values.description}
+                    placeholder="Description"
+                  />
+                  {touched.description && errors.description && (
+                    <Text color="$red10">{errors.description}</Text>
+                  )}
 
-                <Button
-                  onPress={handleSubmit as any}
-                  theme={"orange"}
-                  marginTop="auto"
-                >
-                  Create restaurant
-                </Button>
-              </YStack>
+                  <Input
+                    onChangeText={handleChange("phone")}
+                    onBlur={handleBlur("phone")}
+                    value={values.phone}
+                    placeholder="Phone"
+                  />
+                  {touched.phone && errors.phone && (
+                    <Text color="$red10">{errors.phone}</Text>
+                  )}
+
+                  <Input
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                    value={values.email}
+                    placeholder="Email"
+                  />
+                  {touched.email && errors.email && (
+                    <Text color="$red10">{errors.email}</Text>
+                  )}
+
+                  <Button
+                    onPress={handleSubmit as any}
+                    theme={"orange"}
+                    marginTop="auto"
+                  >
+                    Create restaurant
+                  </Button>
+                </YStack>
+              </>
             )}
           </Formik>
         </ScrollView>

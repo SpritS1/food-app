@@ -20,8 +20,8 @@ export class Restaurant {
   @Prop({ required: true })
   phone: string;
 
-  @Prop({ required: true })
-  cuisine: string[];
+  @Prop({ type: Types.ObjectId, ref: 'Cuisine', required: true })
+  cuisine: Types.ObjectId;
 
   @Prop({ required: true })
   images: string[];

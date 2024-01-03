@@ -128,7 +128,7 @@ const RestaurantDetails = (props: Props) => {
             <Text fontSize="$9">{data?.name}</Text>
 
             <InfoItem text={data?.address} iconName="map-marker-alt" />
-            <InfoItem text={data?.cuisine.join(", ")} iconName="utensils" />
+            <InfoItem text={data?.cuisine.name} iconName="utensils" />
             <InfoItem text={"Average price 85 $"} iconName="money-bill" />
 
             <Divider />

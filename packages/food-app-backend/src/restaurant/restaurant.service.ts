@@ -6,6 +6,7 @@ import { Restaurant } from 'src/schemas/restaurant.schema';
 import { Model, ObjectId } from 'mongoose';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Cuisine } from 'src/schemas/cuisine.schema';
 
 @Injectable()
 export class RestaurantService {
@@ -14,6 +15,7 @@ export class RestaurantService {
    */
   constructor(
     @InjectModel(Restaurant.name) private restaurantModel: Model<Restaurant>,
+    @InjectModel(Cuisine.name) private cuisineModel: Model<Cuisine>,
   ) {}
   @Roles(Role.BusinessOwner)
   async create(
@@ -23,6 +25,7 @@ export class RestaurantService {
   ) {
     const newRestaurant = new this.restaurantModel({
       ...createRestaurantDto,
+      cuisine: await this.cuisineModel.findById(createRestaurantDto.cuisine),
       owner: ownerId,
     });
 
@@ -34,12 +37,14 @@ export class RestaurantService {
   }
 
   async findAll() {
-    const restaurants = await this.restaurantModel.find();
+    const restaurants = await this.restaurantModel.find().populate('cuisine');
     return restaurants;
   }
 
   async findOne(id: ObjectId) {
-    const restaurant = await this.restaurantModel.findById(id);
+    const restaurant = await this.restaurantModel
+      .findById(id)
+      .populate('cuisine');
     return restaurant;
   }
 
@@ -51,7 +56,9 @@ export class RestaurantService {
     restaurant.description = updateRestaurantDto.description;
     restaurant.phone = updateRestaurantDto.phone;
     restaurant.email = updateRestaurantDto.email;
-    restaurant.cuisine = updateRestaurantDto.cuisine;
+    restaurant.cuisine = await this.cuisineModel.findById(
+      updateRestaurantDto.cuisine,
+    );
     restaurant.images = updateRestaurantDto.images;
 
     await restaurant.save();
