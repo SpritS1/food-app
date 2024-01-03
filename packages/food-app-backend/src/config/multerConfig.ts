@@ -18,7 +18,7 @@ export const multerOptions: MulterOptions = {
     callback(null, true);
   },
   storage: diskStorage({
-    destination: path.join(__dirname, '..', '..', 'uploads'),
+    destination: path.join(__dirname, '..', '..', '..', '..', 'uploads'),
     filename: (req, file, callback) => {
       const fileName = generateFileName(file.originalname);
       callback(null, fileName);

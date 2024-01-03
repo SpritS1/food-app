@@ -26,8 +26,8 @@ import * as path from 'path';
     RestaurantModule,
     JwtModule.register({ secret: process.env.JWT_SECRET }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', 'uploads'), // Set the static files location
-      serveRoot: '/uploads', // Map the files under a route
+      rootPath: path.join(__dirname, '..', '..', '..', 'uploads'), // Set the static files location
+      serveRoot: '/uploads', // Map the files under a routes
     }),
   ],
   controllers: [AppController],
