@@ -3,17 +3,29 @@ import React from "react";
 import { Button } from "tamagui";
 import { FontAwesome5 } from "@expo/vector-icons";
 
-type Props = { icon?: string; onPress: () => void; text: string; value: any };
+type Props = {
+  icon?: string;
+  onPress: () => void;
+  defaultText: string;
+  valueDisplay: string;
+  isValueSet: boolean;
+};
 
-const ModalSelectButton = ({ icon, onPress, text, value }: Props) => {
+const ModalSelectButton = ({
+  icon,
+  onPress,
+  defaultText,
+  valueDisplay,
+  isValueSet,
+}: Props) => {
   return (
     <Button
       icon={icon ? <FontAwesome5 name={icon} size={16} /> : undefined}
       variant="outlined"
-      borderColor={value ? "$orange10" : undefined}
+      borderColor={isValueSet ? "$orange10" : undefined}
       onPress={onPress}
     >
-      {value || text}
+      {isValueSet ? valueDisplay : defaultText}
     </Button>
   );
 };

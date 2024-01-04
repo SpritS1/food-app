@@ -1,36 +1,26 @@
 import React, { useState } from "react";
 import { KeyboardAvoidingView, Modal, Platform } from "react-native";
-import { Formik, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import {
-  YStack,
-  Button,
-  Text,
-  Input,
-  XStack,
   Image,
   ScrollView,
+  Text,
+  YStack,
+  Button,
+  Input,
   TextArea,
-  View,
-  Stack,
 } from "tamagui";
-import { CreateRestaurantDto } from "../dto/restaurant/create-restaurant.dto";
+import { Restaurant } from "../../models/restaurant";
+import { Formik, FormikHelpers } from "formik";
+import ModalSelectButton from "../ModalSelectButton";
+import useModal from "../../hooks/useModal";
 import axios from "axios";
-import { useMutation } from "react-query";
-import * as ImagePicker from "expo-image-picker";
+import * as Yup from "yup";
+import { CuisineDTO } from "../../../shared/src/dtos/CuisineDTO";
 import { ImagePickerAsset } from "expo-image-picker";
-import useModal from "../hooks/useModal";
-import SearchLocationModal from "./SearchLocationModal";
-import SearchCuisineModal from "./SearchCuisineModal";
-import { CuisineDTO } from "../../shared/src/dtos/CuisineDTO";
-import { FontAwesome5 } from "@expo/vector-icons";
-import ModalSelectButton from "./ModalSelectButton";
-
-type Props = {
-  visible: boolean;
-  onHide: () => void;
-  onAddSuccess: () => void;
-};
+import { useMutation } from "react-query";
+import SearchLocationModal from "../SearchLocationModal";
+import SearchCuisineModal from "../SearchCuisineModal";
+import { UpdateRestaurantDataDto } from "../../dto/restaurant/update-restaurant.dto";
 
 interface FormValues {
   name: string;
@@ -39,7 +29,6 @@ interface FormValues {
   phone: string;
   email: string;
   cuisine: CuisineDTO;
-  mainImage: ImagePickerAsset;
 }
 
 const restaurantSchema = Yup.object().shape({
@@ -51,36 +40,33 @@ const restaurantSchema = Yup.object().shape({
   cuisine: Yup.object().required("Cuisine is required"),
 });
 
-const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
-  const { name, city, description, phone, email, mainImage, cuisine } =
-    createRestaurantDto;
+const editRestaurant = async (
+  updateRestaurantData: UpdateRestaurantDataDto
+) => {
+  const { name, city, description, phone, email, _id, cuisine } =
+    updateRestaurantData;
 
-  const formData = new FormData();
-
-  formData.append("name", name);
-  formData.append("city", city);
-  formData.append("description", description);
-  formData.append("phone", phone);
-  formData.append("email", email);
-  formData.append("cuisine", cuisine);
-
-  if (mainImage) {
-    formData.append("mainImage", {
-      uri: mainImage.uri,
-      name: mainImage.fileName,
-      type: mainImage.type,
-    } as any);
-  }
-  const response = await axios.post("/restaurant", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axios.patch(
+    `/restaurant/${_id}`,
+    updateRestaurantData
+  );
 
   return response.data;
 };
 
-const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
+type Props = {
+  visible: boolean;
+  onHide: () => void;
+  restaurant: Restaurant;
+  onEditSuccess?: () => void;
+};
+
+const EditDataModal = ({
+  visible,
+  onHide,
+  restaurant,
+  onEditSuccess,
+}: Props) => {
   const {
     visible: locationModalVisible,
     hideModal: hideLocationModal,
@@ -93,45 +79,22 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
     showModal: showCuisineModal,
   } = useModal();
 
-  const [image, setImage] = useState<ImagePickerAsset | null>(null);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-    }
-  };
-
-  const mutation = useMutation(addRestaurant, {
+  const mutation = useMutation(editRestaurant, {
     onSuccess: () => {
-      onAddSuccess();
+      console.log("success");
+      onEditSuccess?.();
       onHide();
     },
     onError: (error) => console.error(error),
   });
 
-  const handleSubmit = async (
-    values: FormValues,
-    formikHelpers: FormikHelpers<CreateRestaurantDto>
-  ) => {
-    if (!image) {
-      alert("Please pick an image");
-      return;
-    }
-
+  const handleSubmit = async (values: FormValues) => {
     mutation.mutate({
+      _id: restaurant._id,
       ...values,
       cuisine: values.cuisine._id,
-      mainImage: image,
     });
 
-    setImage(null);
     onHide();
   };
 
@@ -153,36 +116,15 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
           padding="$4"
           space="$4"
         >
-          <XStack marginBottom="$4" space="$4" justifyContent="space-between">
-            <Text fontSize="$8">New restaurant</Text>
-          </XStack>
-
-          <YStack space="$2" alignItems="center">
-            <Image
-              onPress={pickImage}
-              source={{
-                uri: image
-                  ? image.uri
-                  : require("../assets/images/no_photo.jpg"),
-                width: 150,
-                height: 150,
-              }}
-              borderRadius={"$8"}
-            />
-
-            <Button chromeless onPress={pickImage}>
-              Pick an image
-            </Button>
-          </YStack>
-
           <Formik
             initialValues={
               {
-                name: "Kebab",
-                city: "",
-                description: "Best kebab in town!",
-                phone: "123123123",
-                email: "mateuszpenkala@gmail.com",
+                name: restaurant.name,
+                city: restaurant.city,
+                description: restaurant.description,
+                phone: restaurant.phone,
+                email: restaurant.email,
+                cuisine: restaurant.cuisine,
               } as FormValues
             }
             validationSchema={restaurantSchema}
@@ -225,7 +167,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                       onPress={showCuisineModal}
                       isValueSet={Boolean(values.cuisine)}
                       defaultText="Cuisine"
-                      valueDisplay={values.cuisine?.name}
+                      valueDisplay={values.cuisine.name}
                     />
                   </ScrollView>
 
@@ -286,4 +228,4 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
   );
 };
 
-export default AddRestaurantModal;
+export default EditDataModal;

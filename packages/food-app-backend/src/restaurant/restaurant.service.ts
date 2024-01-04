@@ -72,17 +72,16 @@ export class RestaurantService {
     const restaurant = await this.restaurantModel.findById(id);
 
     restaurant.name = updateRestaurantDto.name;
-    restaurant.address = updateRestaurantDto.address;
+    restaurant.city = updateRestaurantDto.city;
     restaurant.description = updateRestaurantDto.description;
     restaurant.phone = updateRestaurantDto.phone;
     restaurant.email = updateRestaurantDto.email;
     restaurant.cuisine = await this.cuisineModel.findById(
       updateRestaurantDto.cuisine,
     );
-    restaurant.images = updateRestaurantDto.images;
 
     await restaurant.save();
-    return `This action updates a #${id} restaurant`;
+    return restaurant;
   }
 
   remove(id: ObjectId) {

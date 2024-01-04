@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { Image, Stack, Text } from "tamagui";
+import { Image, Stack, Text, XStack } from "tamagui";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Restaurant } from "../models/restaurant";
 
@@ -33,8 +33,10 @@ const RestaurantCard = React.forwardRef<TouchableOpacity, Props>(
             }}
             borderRadius={"$8"}
           />
-          <Stack space="$2">
-            <Text fontSize={"$8"}>{restaurant.name}</Text>
+          <Stack space="$2" flex={1}>
+            <Text fontSize={"$7"} ellipse>
+              {restaurant.name}
+            </Text>
             <Text>{restaurant.city}</Text>
             <Text>
               Visible <FontAwesome5 name="eye" />

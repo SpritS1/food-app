@@ -1,24 +1,10 @@
 import React, { useEffect } from "react";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
-import {
-  Button,
-  Image,
-  ScrollView,
-  Spinner,
-  Stack,
-  Text,
-  Theme,
-} from "tamagui";
+import { Spinner, Stack, Text } from "tamagui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Restaurant } from "../../../models/restaurant";
-import axios from "axios";
-import { useQuery } from "react-query";
 import EditRestaurantModal from "../../../components/RestaurantEdit/EditRestaurantModal";
-import { Dimensions } from "react-native";
-import Divider from "../../../components/Divider";
-import InfoItem from "../../../components/RestaurantView/InfoItem";
 import useRestaurant from "../../../hooks/useRestaurant";
 import RestaurantView from "../../../components/RestaurantView/RestaurantView";
 
@@ -27,7 +13,9 @@ type Props = {};
 const RestaurantDetails = (props: Props) => {
   const { restaurant } = useLocalSearchParams();
 
-  const { data, isLoading, error } = useRestaurant(restaurant as string);
+  const { data, isLoading, error, refetch } = useRestaurant(
+    restaurant as string
+  );
 
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -82,10 +70,10 @@ const RestaurantDetails = (props: Props) => {
     <>
       {data && (
         <EditRestaurantModal
-          restaurantName={data?.name}
-          imageUrl={`${process.env.EXPO_PUBLIC_API_URL}${data?.images[0]}`}
+          restaurant={data}
           visible={editModalVisible}
           onHide={() => setEditModalVisible(false)}
+          onEditSuccess={refetch}
         />
       )}
 

@@ -9,7 +9,11 @@ export class UpdateRestaurantDto extends PartialType(CreateRestaurantDto) {
 
   @IsNotEmpty()
   @IsString()
-  address: string;
+  city: string;
+
+  // @IsNotEmpty()
+  // @IsString()
+  // address: string;
 
   @IsNotEmpty()
   @IsString()

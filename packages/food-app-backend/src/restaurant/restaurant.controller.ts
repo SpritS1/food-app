@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
   Req,
-  UseGuards,
   UseInterceptors,
   UploadedFile,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -18,7 +18,6 @@ import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { ObjectId } from 'mongoose';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/auth/decorators/public.decorator';
 
@@ -60,12 +59,21 @@ export class RestaurantController {
   }
 
   @Roles(Role.BusinessOwner)
-  @UseGuards(OwnershipGuard)
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: ObjectId,
     @Body() updateRestaurantDto: UpdateRestaurantDto,
+    @Req() req,
   ) {
+    const userId = req.user.userId;
+    const restaurant = await this.restaurantService.findOne(id);
+
+    if (userId !== restaurant.owner) {
+      throw new UnauthorizedException(
+        'User is not authorized to update this restaurant',
+      );
+    }
+
     return this.restaurantService.update(id, updateRestaurantDto);
   }
 

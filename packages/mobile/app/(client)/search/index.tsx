@@ -58,8 +58,9 @@ const search = (props: Props) => {
           />
           <XStack>
             <ModalSelectButton
-              text="City"
-              value={city}
+              defaultText="City"
+              valueDisplay={city}
+              isValueSet={Boolean(city)}
               onPress={cityModal.showModal}
             />
           </XStack>

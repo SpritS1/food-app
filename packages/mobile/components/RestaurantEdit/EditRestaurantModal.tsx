@@ -9,22 +9,29 @@ import {
 } from "react-native";
 import { Image, ScrollView, Stack, Text, YStack, Button } from "tamagui";
 import MenuItem from "./MenuItem";
+import useModal from "../../hooks/useModal";
+import EditDataModal from "./EditDataModal";
+import { Restaurant } from "../../models/restaurant";
 
 type Props = {
   visible: boolean;
   onHide: () => void;
-  restaurantName: string;
-  imageUrl: string;
+  restaurant: Restaurant;
+  onEditSuccess: () => void;
 };
 
 const EditRestaurantModal = ({
   visible,
   onHide,
-  restaurantName,
-  imageUrl,
+  restaurant,
+  onEditSuccess,
 }: Props) => {
-  const [editDataModalVisible, setEditDataModalVisible] = useState(false);
-  const [editImagesModalVisible, setEditImagesModalVisible] = useState(false);
+  const {
+    visible: editDataVisible,
+    hideModal: hideEditData,
+    showModal: showEditData,
+  } = useModal();
+  // const [editImagesModalVisible, setEditImagesModalVisible] = useState(false);
 
   return (
     <Modal
@@ -34,38 +41,47 @@ const EditRestaurantModal = ({
       visible={visible}
       onRequestClose={onHide}
     >
-      <BlurView style={styles.blurView} tint="dark" intensity={75}>
-        <SafeAreaView>
-          <YStack height={"100%"} padding="$6">
-            <ScrollView space="$6">
-              <Stack justifyContent="center" alignItems="center" space="$6">
-                <Image
-                  source={{
-                    uri: imageUrl,
-                    width: 200,
-                    height: 200,
-                  }}
-                  borderRadius={"$4"}
-                />
+      <>
+        <BlurView style={styles.blurView} tint="dark" intensity={75}>
+          <SafeAreaView>
+            <YStack height={"100%"} padding="$6">
+              <ScrollView space="$6">
+                <Stack justifyContent="center" alignItems="center" space="$6">
+                  <Image
+                    source={{
+                      uri: `${process.env.EXPO_PUBLIC_API_URL}${restaurant.images[0]}`,
+                      width: 200,
+                      height: 200,
+                    }}
+                    borderRadius={"$4"}
+                  />
 
-                <Text fontSize={"$8"}>{restaurantName}</Text>
-              </Stack>
+                  <Text fontSize={"$8"}>{restaurant.name}</Text>
+                </Stack>
 
-              <MenuItem text="Edit data" icon="edit" />
-              <MenuItem text="Edit images" icon="images" />
-              <MenuItem text="Edit menu" icon="utensils" />
-              <MenuItem text="Hide" icon="eye-slash" />
-              <MenuItem text="Delete" icon="trash" />
-            </ScrollView>
+                <MenuItem text="Edit data" icon="edit" onPress={showEditData} />
+                <MenuItem text="Edit images" icon="images" />
+                <MenuItem text="Edit menu" icon="utensils" />
+                <MenuItem text="Hide" icon="eye-slash" />
+                <MenuItem text="Delete" icon="trash" />
+              </ScrollView>
 
-            <TouchableOpacity onPress={onHide}>
-              <Text textAlign="center" fontSize={"$6"}>
-                Hide
-              </Text>
-            </TouchableOpacity>
-          </YStack>
-        </SafeAreaView>
-      </BlurView>
+              <TouchableOpacity onPress={onHide}>
+                <Text textAlign="center" fontSize={"$6"}>
+                  Hide
+                </Text>
+              </TouchableOpacity>
+            </YStack>
+          </SafeAreaView>
+        </BlurView>
+
+        <EditDataModal
+          visible={editDataVisible}
+          onHide={hideEditData}
+          restaurant={restaurant}
+          onEditSuccess={onEditSuccess}
+        />
+      </>
     </Modal>
   );
 };
