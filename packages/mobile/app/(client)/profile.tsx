@@ -9,10 +9,16 @@ import {
   YGroup,
   YStack,
 } from "tamagui";
-import { Image, Settings, Star, User } from "@tamagui/lucide-icons";
-import { Link } from "expo-router";
+import { Image, Settings, Star, User, StepBack } from "@tamagui/lucide-icons";
+import { Link, useRouter } from "expo-router";
 
 export default function TabTwoScreen() {
+  const router = useRouter();
+
+  const handleAccountTypeChange = () => {
+    router.replace("/");
+  };
+
   return (
     <SafeAreaView>
       <YStack space="$4">
@@ -37,7 +43,7 @@ export default function TabTwoScreen() {
               hoverTheme
               pressTheme
               icon={User}
-              title="Dane personalne"
+              title="Personal data"
               size="$5"
             />
           </YGroup.Item>
@@ -46,7 +52,7 @@ export default function TabTwoScreen() {
               hoverTheme
               pressTheme
               icon={Star}
-              title="Moje opinie"
+              title="My reviews"
               size="$5"
             />
           </YGroup.Item>
@@ -55,7 +61,7 @@ export default function TabTwoScreen() {
               hoverTheme
               pressTheme
               icon={Image}
-              title="Moje zdjęcia"
+              title="My images"
               size="$5"
             />
           </YGroup.Item>
@@ -65,7 +71,17 @@ export default function TabTwoScreen() {
               hoverTheme
               pressTheme
               icon={Settings}
-              title="Ustawienia"
+              title="Settings"
+            />
+          </YGroup.Item>
+          <YGroup.Item>
+            <ListItem
+              onPress={handleAccountTypeChange}
+              size="$5"
+              hoverTheme
+              pressTheme
+              icon={StepBack}
+              title="Change account type"
             />
           </YGroup.Item>
           <Separator />

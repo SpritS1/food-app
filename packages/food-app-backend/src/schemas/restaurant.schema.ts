@@ -12,6 +12,9 @@ export class Restaurant {
   description: string;
 
   @Prop({ required: true })
+  city: string;
+
+  @Prop()
   address: string;
 
   @Prop({ required: true })

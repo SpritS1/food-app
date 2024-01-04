@@ -2,7 +2,7 @@ import { ImagePickerAsset } from "expo-image-picker/build/ImagePicker.types";
 
 export interface CreateRestaurantDto {
   name: string;
-  address: string;
+  city: string;
   description: string;
   phone: string;
   email: string;

@@ -7,7 +7,7 @@ export class CreateRestaurantDto {
 
   @IsNotEmpty()
   @IsString()
-  address: string;
+  city: string;
 
   @IsNotEmpty()
   @IsString()

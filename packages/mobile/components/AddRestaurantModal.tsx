@@ -24,6 +24,7 @@ import SearchLocationModal from "./SearchLocationModal";
 import SearchCuisineModal from "./SearchCuisineModal";
 import { CuisineDTO } from "../../shared/src/dtos/CuisineDTO";
 import { FontAwesome5 } from "@expo/vector-icons";
+import ModalSelectButton from "./ModalSelectButton";
 
 type Props = {
   visible: boolean;
@@ -33,7 +34,7 @@ type Props = {
 
 interface FormValues {
   name: string;
-  address: string;
+  city: string;
   description: string;
   phone: string;
   email: string;
@@ -43,7 +44,7 @@ interface FormValues {
 
 const restaurantSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
-  address: Yup.string().required("Address is required"),
+  city: Yup.string().required("City is required"),
   description: Yup.string().required("Description is required"),
   phone: Yup.string().required("Phone number is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -51,13 +52,13 @@ const restaurantSchema = Yup.object().shape({
 });
 
 const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
-  const { name, address, description, phone, email, mainImage, cuisine } =
+  const { name, city, description, phone, email, mainImage, cuisine } =
     createRestaurantDto;
 
   const formData = new FormData();
 
   formData.append("name", name);
-  formData.append("address", address);
+  formData.append("city", city);
   formData.append("description", description);
   formData.append("phone", phone);
   formData.append("email", email);
@@ -178,7 +179,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
             initialValues={
               {
                 name: "Kebab",
-                address: "",
+                city: "",
                 description: "Best kebab in town!",
                 phone: "123123123",
                 email: "mateuszpenkala@gmail.com",
@@ -200,7 +201,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                 <SearchLocationModal
                   visible={locationModalVisible}
                   onHide={hideLocationModal}
-                  onSelect={(value) => setFieldValue("address", value)}
+                  onSelect={(value) => setFieldValue("city", value)}
                 />
 
                 <SearchCuisineModal
@@ -211,23 +212,19 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
 
                 <YStack space="$4">
                   <ScrollView horizontal space>
-                    <Button
-                      icon={<FontAwesome5 name="map-marker-alt" size={16} />}
-                      variant="outlined"
-                      borderColor={values.address ? "$green10" : undefined}
+                    <ModalSelectButton
+                      icon="map-marker-alt"
                       onPress={showLocationModal}
-                    >
-                      {values.address || "City"}
-                    </Button>
+                      value={values.city}
+                      text="City"
+                    />
 
-                    <Button
-                      icon={<FontAwesome5 name="utensils" size={16} />}
-                      variant="outlined"
-                      borderColor={values.cuisine ? "$green10" : undefined}
+                    <ModalSelectButton
+                      icon="utensils"
                       onPress={showCuisineModal}
-                    >
-                      {values?.cuisine?.name || "Cuisine"}
-                    </Button>
+                      value={values.cuisine}
+                      text="Cuisine"
+                    />
                   </ScrollView>
 
                   <Input

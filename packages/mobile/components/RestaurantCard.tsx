@@ -35,7 +35,7 @@ const RestaurantCard = React.forwardRef<TouchableOpacity, Props>(
           />
           <Stack space="$2">
             <Text fontSize={"$8"}>{restaurant.name}</Text>
-            <Text>{restaurant.address}</Text>
+            <Text>{restaurant.city}</Text>
             <Text>
               Visible <FontAwesome5 name="eye" />
             </Text>

@@ -4,6 +4,7 @@ export type Restaurant = {
   _id: string;
   name: string;
   description: string;
+  city: string;
   address: string;
   email: string;
   phone: string;

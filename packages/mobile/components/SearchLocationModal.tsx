@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useQuery } from "react-query";
-import { Input, ScrollView, Text, XStack, YStack } from "tamagui";
+import { Button, Input, ScrollView, Text, XStack, YStack } from "tamagui";
 import { CityDTO } from "../../shared/src/dtos/CityDTO";
 import Divider from "./Divider";
 
@@ -46,6 +46,11 @@ const SearchLocationModal = ({ visible, onHide, onSelect }: Props) => {
     onHide();
   };
 
+  const handleClear = () => {
+    onSelect("");
+    onHide();
+  };
+
   const handleClose = () => {
     setSearchValue("");
     onHide();
@@ -69,7 +74,10 @@ const SearchLocationModal = ({ visible, onHide, onSelect }: Props) => {
           padding="$4"
           space="$4"
         >
-          <Text fontSize="$9">City</Text>
+          <XStack justifyContent="space-between" space>
+            <Text fontSize="$9">City</Text>
+            <Button onPress={handleClear}>Clear</Button>
+          </XStack>
 
           <Divider />
 

@@ -36,8 +36,28 @@ export class RestaurantService {
     return await newRestaurant.save();
   }
 
-  async findAll() {
-    const restaurants = await this.restaurantModel.find().populate('cuisine');
+  async findAll(filters?: { name?: string; city?: string; cuisine?: string }) {
+    const query: any = {};
+    console.log(filters.city);
+    if (filters) {
+      if (filters.name) {
+        query.name = { $regex: filters.name, $options: 'i' };
+      }
+      if (filters.city) {
+        query.city = { $regex: filters.city, $options: 'i' };
+      }
+      if (filters.cuisine) {
+        const cuisineIds = await this.cuisineModel
+          .find({ name: { $regex: filters.cuisine, $options: 'i' } })
+          .select('_id');
+        query.cuisine = { $in: cuisineIds.map((c) => c._id) };
+      }
+    }
+
+    const restaurants = await this.restaurantModel
+      .find(query)
+      .populate('cuisine');
+
     return restaurants;
   }
 

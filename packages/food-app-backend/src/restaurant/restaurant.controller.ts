@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -19,16 +20,23 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('restaurant')
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) {}
 
+  @Public()
   @Get()
-  async findAll() {
-    return this.restaurantService.findAll();
+  async findAll(
+    @Query('name') name?: string,
+    @Query('city') city?: string,
+    @Query('cuisine') cuisine?: string,
+  ) {
+    return this.restaurantService.findAll({ name, city, cuisine });
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: ObjectId) {
     return this.restaurantService.findOne(id);

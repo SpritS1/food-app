@@ -12,7 +12,7 @@ const InfoItem = ({ iconName, text }: Props) => (
     <Stack
       backgroundColor="$orange5"
       padding="$2"
-      width={"$2"}
+      width={"$3"}
       borderRadius={"$2"}
       justifyContent="center"
       alignItems="center"
