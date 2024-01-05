@@ -8,17 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UsersService } from 'src/users/users.service';
 import { AccountType } from '../../../shared/dist/src/types';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userService: UsersService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Public()
   @UseGuards(AuthGuard('local'))

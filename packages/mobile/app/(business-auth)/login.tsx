@@ -1,9 +1,4 @@
-import {
-  StyleSheet,
-  GestureResponderEvent,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { StyleSheet, GestureResponderEvent } from "react-native";
 import React from "react";
 import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -44,7 +39,11 @@ const BusinessLogin = () => {
         <YStack paddingHorizontal="$4" gap="$4" height="100%">
           <Text fontSize={"$10"}>Zaloguj się</Text>
           <Formik
-            initialValues={{ email: email as string, password: "" }}
+            initialValues={{
+              email: email as string,
+              password: "",
+              accountType: "business",
+            }}
             validationSchema={SignInSchema}
             onSubmit={handleSignIn}
           >

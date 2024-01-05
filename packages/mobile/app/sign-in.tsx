@@ -9,7 +9,7 @@ import { Formik, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button, Input, Stack, Text, YStack } from "tamagui";
 import { useMutation } from "react-query";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth, LoginValues } from "../contexts/AuthContext";
 
@@ -21,10 +21,12 @@ const SignInSchema = Yup.object().shape({
 const SignIn = () => {
   const { login } = useAuth();
   const mutations = useMutation(login);
+  const router = useRouter();
 
   const handleSignIn = async (values: LoginValues) => {
     try {
-      await mutations.mutateAsync(values);
+      const result = await mutations.mutateAsync(values);
+      if (result) router.replace("/(client)");
     } catch (error) {
       console.error("Sign-in failed", error);
     }
@@ -38,9 +40,9 @@ const SignIn = () => {
     <TouchableWithoutFeedback onPress={handleContainerPress}>
       <SafeAreaView>
         <YStack paddingHorizontal="$4" gap="$4" height="100%">
-          <Text fontSize={"$10"}>Zaloguj się</Text>
+          <Text fontSize={"$10"}>Sign in</Text>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: "", password: "", accountType: "regular" }}
             validationSchema={SignInSchema}
             onSubmit={handleSignIn}
           >
@@ -92,9 +94,9 @@ const SignIn = () => {
           </Formik>
 
           <YStack alignItems="center" gap="$2" marginTop="auto">
-            <Text>Nie posiadasz konta?</Text>
+            <Text>Don't have an account yey?</Text>
             <Link href={"/register"} asChild>
-              <Text>Zarejestruj się</Text>
+              <Button chromeless>Create account</Button>
             </Link>
           </YStack>
         </YStack>

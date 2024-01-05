@@ -50,7 +50,6 @@ export class AuthService {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // unify roles and accountType
       const roles: Role[] =
         accountType === 'regular' ? [Role.User] : [Role.BusinessOwner];
 

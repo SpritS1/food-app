@@ -11,6 +11,7 @@ import { AccountType, AuthResponse } from "../../shared/dist/src/types";
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import AuthTokenPayload from "../../shared/dist/src/types/AuthTokenPayload";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthContextProps {
   authToken: string | null;
@@ -20,6 +21,7 @@ interface AuthContextProps {
   checkEmail: (email: string, accountType: AccountType) => Promise<boolean>;
   userData: AuthTokenPayload | null;
   initialized: boolean;
+  accountType: AccountType | null;
 }
 
 const AuthContext = createContext<AuthContextProps | null>(null);
@@ -27,7 +29,7 @@ const AuthContext = createContext<AuthContextProps | null>(null);
 export interface LoginValues {
   email: string;
   password: string;
-  accountType?: AccountType;
+  accountType: AccountType;
 }
 
 export interface RegisterValues {
@@ -43,19 +45,19 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<AuthTokenPayload | null>(null);
+  const [accountType, setAccountType] = useState<AccountType | null>(null);
   const [initialized, setInitialized] = useState<boolean>(false);
 
   const setTokenStates = (token: string) => {
-    console.log(`Setting token states to ${token}`);
     setAuthToken(token);
     setUserData(jwtDecode<AuthTokenPayload>(token));
   };
 
   const clearTokenStates = () => {
-    console.log("Clearing token states");
     setAuthToken(null);
     setUserData(null);
   };
+
   const saveAuthToken = async (token: string) => {
     try {
       setTokenStates(token);
@@ -65,12 +67,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const saveAccountType = async (accountType: AccountType) => {
+    try {
+      await AsyncStorage.setItem("accountType", accountType);
+      setAccountType(accountType);
+    } catch (error) {
+      console.error("Error saving account type:", error);
+    }
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         const tokenFromStorage = await SecureStore.getItemAsync("authToken");
+        const accountTypeFromStorage = await AsyncStorage.getItem(
+          "accountType"
+        );
+
         if (tokenFromStorage) {
           setTokenStates(tokenFromStorage);
+          await saveAccountType(accountTypeFromStorage as AccountType);
         }
       } catch (error) {
         console.error("Error initializing auth token:", error);
@@ -129,13 +145,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ) => {
     try {
       const response = await axios.post<AuthResponse>(`/auth/login`, values);
+
       if (response.status !== HttpStatusCode.Ok) {
         alert("Sign-in failed. Please try again.");
         return false;
       }
 
       setTokenStates(response.data.access_token);
-      saveAuthToken(response.data.access_token);
+      await saveAuthToken(response.data.access_token);
+      await saveAccountType(values.accountType);
+
       return true;
     } catch (error) {
       console.error("Sign-in failed", error);
@@ -155,7 +174,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (response.status === HttpStatusCode.Created) {
-        saveAuthToken(response.data.access_token);
+        await saveAuthToken(response.data.access_token);
         return true;
       }
 
@@ -180,6 +199,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     register,
     checkEmail,
+    accountType,
   };
 
   return (

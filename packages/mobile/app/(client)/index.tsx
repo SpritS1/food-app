@@ -6,18 +6,11 @@ import {
 } from "react-native";
 import React from "react";
 import { YStack, Text, XStack, Button, Input } from "tamagui";
-import { FontAwesome } from "@expo/vector-icons";
 import { Settings2 } from "@tamagui/lucide-icons";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ClientHomeScreen() {
-  const [searchQuery, setSearchQuery] = React.useState("");
-
-  const colorScheme = useColorScheme();
-
-  const getBackgroundColor = () => {
-    // Determine background color based on the color scheme
-    return colorScheme === "dark" ? "black" : "white"; // Modify as needed
-  };
+  const auth = useAuth();
 
   const handleContainerPress = () => {
     Keyboard.dismiss();
@@ -25,11 +18,9 @@ export default function ClientHomeScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={handleContainerPress}>
-      <SafeAreaView
-      // style={[styles.container, { backgroundColor: getBackgroundColor() }]}
-      >
+      <SafeAreaView>
         <YStack padding="$4" space="$4">
-          <Text fontSize="$8">Witaj! Mateusz</Text>
+          <Text fontSize="$8">Hello {auth.userData?.email}</Text>
           <Text fontSize="$9" fontWeight={"600"}>
             Gdzie dzisiaj zjemy?
           </Text>

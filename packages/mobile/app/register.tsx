@@ -13,22 +13,22 @@ type Props = {};
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().required("Password is required"),
-  passwordConfirmation: Yup.string().required(
-    "Password confirmation is required"
-  ),
+  passwordConfirm: Yup.string().required("Password confirmation is required"),
 });
 
 interface RegisterFormValues extends RegisterValues {
-  confirmPass: string;
+  passwordConfirm: string;
 }
 
 const Register = () => {
   const { register } = useAuth();
   const mutations = useMutation(register);
 
-  const handleSignIn = async (values: RegisterValues) => {
+  const handleSignIn = async (values: RegisterFormValues) => {
     try {
-      await mutations.mutateAsync(values);
+      console.log(values);
+      const { passwordConfirm, ...rest } = values;
+      await mutations.mutateAsync(rest);
     } catch (error) {
       console.error("Sign-in failed", error);
     }
@@ -39,7 +39,13 @@ const Register = () => {
       <YStack paddingHorizontal="$4" gap="$4" height="100%">
         <Text fontSize={"$10"}>Załóż konto</Text>
         <Formik
-          initialValues={{ email: "", password: "", passwordConfirm: "" }}
+          initialValues={
+            {
+              email: "",
+              password: "",
+              passwordConfirm: "",
+            } as RegisterFormValues
+          }
           validationSchema={SignInSchema}
           onSubmit={handleSignIn}
         >
@@ -88,7 +94,7 @@ const Register = () => {
 
               <Button
                 color="orange"
-                onPress={handleSubmit}
+                onPress={handleSubmit as any}
                 disabled={isSubmitting}
               >
                 Sign In

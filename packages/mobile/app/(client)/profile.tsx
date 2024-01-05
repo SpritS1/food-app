@@ -9,11 +9,20 @@ import {
   YGroup,
   YStack,
 } from "tamagui";
-import { Image, Settings, Star, User, StepBack } from "@tamagui/lucide-icons";
+import {
+  Image,
+  Settings,
+  Star,
+  User,
+  ChefHat,
+  LogOut,
+} from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function TabTwoScreen() {
   const router = useRouter();
+  const auth = useAuth();
 
   const handleAccountTypeChange = () => {
     router.replace("/");
@@ -22,16 +31,22 @@ export default function TabTwoScreen() {
   return (
     <SafeAreaView>
       <YStack space="$4">
-        <YStack space="$4" padding="$4">
-          <Stack space="$2">
-            <Text fontSize="$8">Twoje konto</Text>
-            <Text fontSize="$5">
-              Zaloguj się aby móc korzystać z wszystkich funkcji aplikacji
-            </Text>
-          </Stack>
-          <Link href="/sign-in" asChild>
-            <Button color="orange">Zaloguj się lub zarejestruj</Button>
-          </Link>
+        <YStack space padding="$4">
+          {auth.userData ? (
+            <Text fontSize="$8">Hello {auth.userData?.email}</Text>
+          ) : (
+            <YStack space>
+              <Stack space>
+                <Text fontSize="$8">Twoje konto</Text>
+                <Text fontSize="$5">
+                  Zaloguj się aby móc korzystać z wszystkich funkcji aplikacji
+                </Text>
+              </Stack>
+              <Link href="/sign-in" asChild>
+                <Button color="orange">Zaloguj się lub zarejestruj</Button>
+              </Link>
+            </YStack>
+          )}
         </YStack>
 
         <YGroup>
@@ -80,8 +95,19 @@ export default function TabTwoScreen() {
               size="$5"
               hoverTheme
               pressTheme
-              icon={StepBack}
+              icon={ChefHat}
               title="Change account type"
+            />
+          </YGroup.Item>
+
+          <YGroup.Item>
+            <ListItem
+              onPress={auth.logout}
+              size="$5"
+              hoverTheme
+              pressTheme
+              icon={LogOut}
+              title="Logout"
             />
           </YGroup.Item>
           <Separator />

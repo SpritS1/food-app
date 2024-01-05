@@ -12,15 +12,16 @@ type Props = {};
 
 const StartScreen = (props: Props) => {
   // const [appIsReady, setAppIsReady] = React.useState<boolean>(false);
-  const { initialized, authToken } = useAuth();
+  const { initialized, authToken, accountType } = useAuth();
 
   const onLayoutRootView = useCallback(async () => {
     if (initialized) {
-      console.log(`authToken: ${authToken}`);
-      if (authToken) router.replace("/(owner)");
+      console.log(`Account type: ${accountType} - ${authToken}`);
+      if (authToken) {
+        if (accountType === "business") router.replace("/(owner)");
+        else if (accountType === "regular") router.replace("/(client)");
+      }
 
-      // if (userData?.accountType === "business") router.replace("/(owner)");
-      // else if (userData?.accountType === "regular") router.replace("/(client)");
       ExpoSplashScreen.hideAsync();
     }
   }, [initialized]);
@@ -30,7 +31,7 @@ const StartScreen = (props: Props) => {
   };
 
   const handleRestaurantOwnerPress = () => {
-    router.replace("/(business-auth)/create-account");
+    router.push("/(business-auth)/create-account");
   };
 
   if (!initialized) return <SplashScreen />;
