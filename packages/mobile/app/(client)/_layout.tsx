@@ -18,6 +18,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        unmountOnBlur: true,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -47,8 +49,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
-          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          unmountOnBlur: false,
         }}
       />
       <Tabs.Screen

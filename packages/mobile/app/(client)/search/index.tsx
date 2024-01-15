@@ -4,26 +4,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Restaurant } from "../../../models/restaurant";
-import RestaurantCard from "../../../components/RestaurantCard";
 import ModalSelectButton from "../../../components/ModalSelectButton";
 import useModal from "../../../hooks/useModal";
 import SearchLocationModal from "../../../components/SearchLocationModal";
 import { Link } from "expo-router";
+import ClientRestaurantCard from "../../../components/ClientRestaurantCard/ClientRestaurantCard";
+import { useAuth } from "../../../contexts/AuthContext";
+import { fetchFavorites } from "../../../services/favoritesService";
+import { fetchRestaurants } from "../../../services/restaurantService";
 
 type Props = {};
 
-const fetchRestaurants = async (
-  name: string,
-  city: string,
-  cuisine: string
-) => {
-  const response = await axios.get<Restaurant[]>(
-    `/restaurant?name=${name}&city=${city}&cuisine=${cuisine}`
-  );
-  return response.data;
-};
-
 const search = (props: Props) => {
+  const auth = useAuth();
+
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [cuisine, setCuisine] = useState("");
@@ -32,12 +26,16 @@ const search = (props: Props) => {
 
   const searchingDisbaled = !name && !city && !cuisine;
 
-  const { data, isLoading, error, refetch } = useQuery(
+  const restaurantsQuery = useQuery(
     ["restaurants", name, city, cuisine],
     () => fetchRestaurants(name, city, cuisine),
     {
       enabled: !searchingDisbaled,
     }
+  );
+
+  const favoritesQuery = useQuery(["favorites", auth.userData?.userId], () =>
+    fetchFavorites(auth.userData?.userId || "")
   );
 
   return (
@@ -73,13 +71,19 @@ const search = (props: Props) => {
         )}
 
         <ScrollView space>
-          {data?.map((restaurant) => (
+          {restaurantsQuery.data?.map((restaurant) => (
             <Link
               href={`/(client)/search/${restaurant._id}`}
               key={restaurant._id}
               asChild
             >
-              <RestaurantCard key={restaurant._id} restaurant={restaurant} />
+              <ClientRestaurantCard
+                key={restaurant._id}
+                restaurant={restaurant}
+                isFavourite={favoritesQuery.data?.some(
+                  (fav) => fav._id === restaurant._id
+                )}
+              />
             </Link>
           ))}
         </ScrollView>

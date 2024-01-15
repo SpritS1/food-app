@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Restaurant } from 'src/schemas/restaurant.schema';
 import { User } from 'src/schemas/user.schema';
 
@@ -18,5 +18,53 @@ export class UsersService {
   async getRestaurantsByUserId(userId: string): Promise<Restaurant[]> {
     const restaurants = await this.restaurantModel.find({ owner: userId });
     return restaurants;
+  }
+
+  async getFavoriteRestaurants(userId: string): Promise<Restaurant[]> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const restaurants = await this.restaurantModel.find({
+      _id: { $in: user.favoriteRestaurants },
+    });
+
+    return restaurants;
+  }
+
+  async addFavoriteRestaurant(
+    userId: string,
+    restaurantId: string,
+  ): Promise<void> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const restaurantObjectId = new Types.ObjectId(restaurantId);
+
+    if (user.favoriteRestaurants.includes(restaurantObjectId)) {
+      throw new Error('Restaurant is already in your favorites');
+    }
+
+    await this.userModel.findByIdAndUpdate(userId, {
+      $addToSet: { favoriteRestaurants: restaurantId },
+    });
+  }
+
+  async removeFavoriteRestaurant(
+    userId: string,
+    restaurantId: string,
+  ): Promise<User> {
+    return this.userModel
+      .findByIdAndUpdate(
+        userId,
+        { $pull: { favoriteRestaurants: restaurantId } },
+        { new: true },
+      )
+      .populate('favoriteRestaurants');
   }
 }

@@ -38,7 +38,7 @@ export class RestaurantService {
 
   async findAll(filters?: { name?: string; city?: string; cuisine?: string }) {
     const query: any = {};
-    console.log(filters.city);
+
     if (filters) {
       if (filters.name) {
         query.name = { $regex: filters.name, $options: 'i' };
