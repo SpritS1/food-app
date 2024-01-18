@@ -6,6 +6,7 @@ export const fetchFavorites = async (userId: string) => {
     const response = await axios.get<Restaurant[]>(
       `/users/${userId}/favorites`
     );
+
     return response.data;
   } catch (error) {
     console.error("Error fetching favorites:", error);

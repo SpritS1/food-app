@@ -61,7 +61,7 @@ const ClientRestaurantCard = ({
               paddingVertical="$1"
             >
               <Text textAlign="center" fontSize={"$8"}>
-                9.5
+                {restaurant.avgRating == 0 ? "-" : restaurant.avgRating}
               </Text>
             </Stack>
 

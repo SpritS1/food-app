@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { RestaurantRatingService } from 'src/restaurant-rating/restaurant-rating.service';
 import { Restaurant } from 'src/schemas/restaurant.schema';
 import { User } from 'src/schemas/user.schema';
 
@@ -9,6 +10,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Restaurant.name) private restaurantModel: Model<Restaurant>,
+    private readonly ratingService: RestaurantRatingService,
   ) {}
 
   async findOne(email: string): Promise<User | null> {
@@ -31,7 +33,22 @@ export class UsersService {
       _id: { $in: user.favoriteRestaurants },
     });
 
-    return restaurants;
+    const restaurantsWithAvgRating = await Promise.all(
+      restaurants.map(async (restaurant) => {
+        const avgRating = await this.ratingService.getAverageRating(
+          restaurant._id,
+        );
+
+        return {
+          ...restaurant.toJSON(),
+          avgRating,
+        };
+      }),
+    );
+
+    // console.log(restaurantsWithAvgRating);
+
+    return restaurantsWithAvgRating;
   }
 
   async addFavoriteRestaurant(

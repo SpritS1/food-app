@@ -3,19 +3,18 @@ import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Restaurant } from 'src/schemas/restaurant.schema';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, Types } from 'mongoose';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Cuisine } from 'src/schemas/cuisine.schema';
+import { RestaurantRatingService } from 'src/restaurant-rating/restaurant-rating.service';
 
 @Injectable()
 export class RestaurantService {
-  /**
-   *
-   */
   constructor(
     @InjectModel(Restaurant.name) private restaurantModel: Model<Restaurant>,
     @InjectModel(Cuisine.name) private cuisineModel: Model<Cuisine>,
+    private readonly ratingService: RestaurantRatingService,
   ) {}
   @Roles(Role.BusinessOwner)
   async create(
@@ -58,17 +57,38 @@ export class RestaurantService {
       .find(query)
       .populate('cuisine');
 
-    return restaurants;
+    const restaurantsWithAvgRating = await Promise.all(
+      restaurants.map(async (restaurant) => {
+        const avgRating = await this.ratingService.getAverageRating(
+          restaurant._id,
+        );
+        console.log(avgRating);
+        return {
+          ...restaurant.toJSON(),
+          avgRating,
+        };
+      }),
+    );
+
+    // console.log(restaurantsWithAvgRating);
+
+    return restaurantsWithAvgRating;
   }
 
-  async findOne(id: ObjectId) {
+  async findOne(id: Types.ObjectId) {
     const restaurant = await this.restaurantModel
       .findById(id)
       .populate('cuisine');
-    return restaurant;
+
+    const avgRating = await this.ratingService.getAverageRating(id);
+
+    return {
+      ...restaurant.toJSON(),
+      avgRating,
+    };
   }
 
-  async update(id: ObjectId, updateRestaurantDto: UpdateRestaurantDto) {
+  async update(id: Types.ObjectId, updateRestaurantDto: UpdateRestaurantDto) {
     const restaurant = await this.restaurantModel.findById(id);
 
     restaurant.name = updateRestaurantDto.name;
@@ -85,6 +105,6 @@ export class RestaurantService {
   }
 
   remove(id: ObjectId) {
-    return `This action removes a #${id} restaurant`;
+    throw new Error('Method not implemented.');
   }
 }

@@ -104,6 +104,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (authToken) {
         config.headers["Authorization"] = `Bearer ${authToken}`;
       }
+
       return config;
     },
     (error: AxiosError) => {

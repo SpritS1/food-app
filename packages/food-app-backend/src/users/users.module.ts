@@ -5,6 +5,7 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { UsersController } from './users.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { Restaurant, RestaurantSchema } from 'src/schemas/restaurant.schema';
+import { RestaurantRatingModule } from 'src/restaurant-rating/restaurant-rating.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { Restaurant, RestaurantSchema } from 'src/schemas/restaurant.schema';
     MongooseModule.forFeature([
       { name: Restaurant.name, schema: RestaurantSchema },
     ]),
+    RestaurantRatingModule,
   ],
   providers: [UsersService, AuthService],
   exports: [UsersService],

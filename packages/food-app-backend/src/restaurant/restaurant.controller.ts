@@ -15,7 +15,7 @@ import {
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
-import { ObjectId } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -37,8 +37,8 @@ export class RestaurantController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: ObjectId) {
-    return this.restaurantService.findOne(id);
+  async findOne(@Param('id') id: Types.ObjectId) {
+    return await this.restaurantService.findOne(id);
   }
 
   @Roles(Role.BusinessOwner)
@@ -61,7 +61,7 @@ export class RestaurantController {
   @Roles(Role.BusinessOwner)
   @Patch(':id')
   async update(
-    @Param('id') id: ObjectId,
+    @Param('id') id: Types.ObjectId,
     @Body() updateRestaurantDto: UpdateRestaurantDto,
     @Req() req,
   ) {

@@ -13,6 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { LocationModule } from './location/location.module';
 import { CuisineModule } from './cuisine/cuisine.module';
 import { CityModule } from './city/city.module';
+import { RestaurantRatingModule } from './restaurant-rating/restaurant-rating.module';
 import * as path from 'path';
 
 @Module({
@@ -35,6 +36,7 @@ import * as path from 'path';
     LocationModule,
     CuisineModule,
     CityModule,
+    RestaurantRatingModule,
   ],
   controllers: [AppController],
   providers: [

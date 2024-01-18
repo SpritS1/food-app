@@ -6,6 +6,7 @@ import { Restaurant, RestaurantSchema } from 'src/schemas/restaurant.schema';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/multerConfig';
 import { Cuisine, CuisineSchema } from 'src/schemas/cuisine.schema';
+import { RestaurantRatingModule } from 'src/restaurant-rating/restaurant-rating.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { Cuisine, CuisineSchema } from 'src/schemas/cuisine.schema';
     ]),
 
     MulterModule.register(multerOptions),
+    RestaurantRatingModule,
   ],
   controllers: [RestaurantController],
   providers: [RestaurantService],

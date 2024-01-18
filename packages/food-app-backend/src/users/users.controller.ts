@@ -30,11 +30,12 @@ export class UsersController {
     return this.usersService.getRestaurantsByUserId(userId);
   }
 
+  @UseGuards(OwnershipGuard)
   @Get(':id/favorites')
   async getFavoriteRestaurants(
     @Param('id') userId: string,
   ): Promise<Restaurant[]> {
-    return this.usersService.getFavoriteRestaurants(userId);
+    return await this.usersService.getFavoriteRestaurants(userId);
   }
 
   @UseGuards(OwnershipGuard)
