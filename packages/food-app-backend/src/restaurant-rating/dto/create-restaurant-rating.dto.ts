@@ -10,7 +10,7 @@ export class CreateRestaurantRatingDto {
 
   @IsNumber()
   @Min(1)
-  @Max(5)
+  @Max(10)
   rating: number;
 
   @IsString()

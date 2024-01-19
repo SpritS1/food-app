@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRestaurantRatingDto } from './dto/create-restaurant-rating.dto';
-import { UpdateRestaurantRatingDto } from './dto/update-restaurant-rating.dto';
 import { Restaurant } from 'src/schemas/restaurant.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { RestaurantRating } from 'src/schemas/restaurantRating.schema';
 import { RestaurantRatingDTO } from './dto/get-rating.dto';
 
@@ -17,13 +16,17 @@ export class RestaurantRatingService {
 
   async create(createRestaurantRatingDto: CreateRestaurantRatingDto) {
     const { restaurantId, userId } = createRestaurantRatingDto;
+
     const rating = await this.ratingModel.findOne({ restaurantId, userId });
 
     if (rating) {
       throw new Error('You have already rated this restaurant');
     }
 
-    await this.ratingModel.create(createRestaurantRatingDto);
+    await this.ratingModel.create({
+      ...createRestaurantRatingDto,
+      user: userId,
+    });
 
     return `Rating added: ${createRestaurantRatingDto.rating}`;
   }

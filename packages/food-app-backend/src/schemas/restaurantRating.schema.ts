@@ -12,7 +12,7 @@ export class RestaurantRating {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   user: User;
 
-  @Prop({ required: true, max: 5, min: 1 })
+  @Prop({ required: true, max: 10, min: 1 })
   rating: number;
 
   @Prop({ default: '' })

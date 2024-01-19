@@ -30,7 +30,7 @@ export class RestaurantRatingController {
         .status(HttpStatus.OK)
         .json({ message: 'Rating added successfully' });
     } catch (error) {
-      console.error('Error removing restaurant from favorites:', error);
+      console.error('Error while creating rating:', error);
 
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
