@@ -110,14 +110,16 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                 >
                   <FontAwesome5 name="star" size="20" color="orange" />
                   <Text fontSize={"$8"}>
-                    {restaurant.avgRating == 0 ? "-" : restaurant.avgRating}
+                    {restaurant.ratingInfo.ratingsCount == 0
+                      ? "-"
+                      : restaurant.ratingInfo.averageRating}
                   </Text>
                 </XStack>
 
                 <YStack justifyContent="center" space="$1">
                   <Text fontSize={"$3"}>Awesome</Text>
                   <Text fontSize={"$2"} color="$color11">
-                    320 reviews
+                    {restaurant.ratingInfo.ratingsCount} reviews
                   </Text>
                 </YStack>
               </XStack>

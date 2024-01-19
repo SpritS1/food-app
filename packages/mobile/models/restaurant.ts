@@ -11,5 +11,8 @@ export type Restaurant = {
   cuisine: CuisineDTO;
   owner: string;
   images: string[];
-  avgRating: number;
+  ratingInfo: {
+    averageRating: number;
+    ratingsCount: number;
+  };
 };

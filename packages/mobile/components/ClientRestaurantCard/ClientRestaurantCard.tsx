@@ -61,14 +61,16 @@ const ClientRestaurantCard = ({
               paddingVertical="$1"
             >
               <Text textAlign="center" fontSize={"$8"}>
-                {restaurant.avgRating == 0 ? "-" : restaurant.avgRating}
+                {restaurant.ratingInfo.ratingsCount == 0
+                  ? "-"
+                  : restaurant.ratingInfo.averageRating}
               </Text>
             </Stack>
 
             <YStack space="$1">
               <Text fontSize="$1">Outstanding</Text>
               <Text alignSelf="flex-end" color={"$gray10"} fontSize="$1">
-                (16)
+                ({restaurant.ratingInfo.ratingsCount})
               </Text>
             </YStack>
           </Stack>

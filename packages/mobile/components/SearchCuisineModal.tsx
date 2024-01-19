@@ -9,7 +9,7 @@ import Divider from "./Divider";
 type Props = {
   visible: boolean;
   onHide: () => void;
-  onSelect: (city: CuisineDTO) => void;
+  onSelect: (cuisine: CuisineDTO) => void;
 };
 
 const fetchCuisine = async () => {

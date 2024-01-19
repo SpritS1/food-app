@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Input, ScrollView, Stack, Text, XStack, YStack } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
-import axios from "axios";
-import { Restaurant } from "../../../models/restaurant";
 import ModalSelectButton from "../../../components/ModalSelectButton";
 import useModal from "../../../hooks/useModal";
 import SearchLocationModal from "../../../components/SearchLocationModal";
@@ -12,6 +10,8 @@ import ClientRestaurantCard from "../../../components/ClientRestaurantCard/Clien
 import { useAuth } from "../../../contexts/AuthContext";
 import { fetchFavorites } from "../../../services/favoritesService";
 import { fetchRestaurants } from "../../../services/restaurantService";
+import SearchCuisineModal from "../../../components/SearchCuisineModal";
+import { CuisineDTO } from "../../../../shared/src/dtos/CuisineDTO";
 
 type Props = {};
 
@@ -20,15 +20,16 @@ const search = (props: Props) => {
 
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
-  const [cuisine, setCuisine] = useState("");
+  const [cuisine, setCuisine] = useState<CuisineDTO | null>(null);
 
   const cityModal = useModal();
+  const cuisineModal = useModal();
 
   const searchingDisbaled = !name && !city && !cuisine;
 
   const restaurantsQuery = useQuery(
     ["restaurants", name, city, cuisine],
-    () => fetchRestaurants(name, city, cuisine),
+    () => fetchRestaurants(name, city, cuisine?.name || ""),
     {
       enabled: !searchingDisbaled,
     }
@@ -46,6 +47,12 @@ const search = (props: Props) => {
         onSelect={setCity}
       />
 
+      <SearchCuisineModal
+        visible={cuisineModal.visible}
+        onHide={cuisineModal.hideModal}
+        onSelect={setCuisine}
+      />
+
       <Stack height={"100%"} padding="$4" space>
         <YStack space>
           <Input
@@ -54,12 +61,19 @@ const search = (props: Props) => {
             value={name}
             onChangeText={setName}
           />
-          <XStack>
+          <XStack space>
             <ModalSelectButton
               defaultText="City"
               valueDisplay={city}
               isValueSet={Boolean(city)}
               onPress={cityModal.showModal}
+            />
+
+            <ModalSelectButton
+              defaultText="Cuisine"
+              valueDisplay={cuisine?.name || ""}
+              isValueSet={Boolean(cuisine)}
+              onPress={cuisineModal.showModal}
             />
           </XStack>
         </YStack>

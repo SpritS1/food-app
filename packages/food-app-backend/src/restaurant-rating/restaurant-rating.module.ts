@@ -5,8 +5,10 @@ import { MulterModule } from '@nestjs/platform-express';
 import { multerOptions } from 'src/config/multerConfig';
 import { Restaurant, RestaurantSchema } from 'src/schemas/restaurant.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RestaurantRating } from './entities/restaurant-rating.entity';
-import { RestaurantRatingSchema } from 'src/schemas/restaurantRating.schema';
+import {
+  RestaurantRating,
+  RestaurantRatingSchema,
+} from 'src/schemas/restaurantRating.schema';
 
 @Module({
   imports: [

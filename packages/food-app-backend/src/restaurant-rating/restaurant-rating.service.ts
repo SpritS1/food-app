@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { RestaurantRating } from 'src/schemas/restaurantRating.schema';
 import { RestaurantRatingDTO } from './dto/get-rating.dto';
+import { RatingInfo } from './utils/ratingInfo';
 
 @Injectable()
 export class RestaurantRatingService {
@@ -63,16 +64,23 @@ export class RestaurantRatingService {
     return `This action removes a #${id} restaurantRating`;
   }
 
-  async getAverageRating(restaurantId: Types.ObjectId): Promise<number> {
+  async getAverageRating(restaurantId: Types.ObjectId): Promise<RatingInfo> {
     const ratings = await this.ratingModel.find({
       restaurantId: restaurantId.toString(),
     });
 
-    if (ratings.length === 0) return 0;
+    if (ratings.length === 0)
+      return {
+        averageRating: 0,
+        ratingsCount: 0,
+      };
 
     const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0);
     const averageRating = totalRating / ratings.length;
 
-    return averageRating;
+    return {
+      averageRating,
+      ratingsCount: ratings.length,
+    };
   }
 }

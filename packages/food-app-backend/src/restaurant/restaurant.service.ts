@@ -59,18 +59,16 @@ export class RestaurantService {
 
     const restaurantsWithAvgRating = await Promise.all(
       restaurants.map(async (restaurant) => {
-        const avgRating = await this.ratingService.getAverageRating(
+        const ratingInfo = await this.ratingService.getAverageRating(
           restaurant._id,
         );
-        console.log(avgRating);
+
         return {
           ...restaurant.toJSON(),
-          avgRating,
+          ratingInfo,
         };
       }),
     );
-
-    // console.log(restaurantsWithAvgRating);
 
     return restaurantsWithAvgRating;
   }
