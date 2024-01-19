@@ -12,6 +12,7 @@ import {
 import { UsersService } from './users.service';
 import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
 import { Restaurant } from 'src/schemas/restaurant.schema';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {

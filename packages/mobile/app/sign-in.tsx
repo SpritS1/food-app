@@ -72,7 +72,6 @@ const SignIn = () => {
                   onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
                   value={values.password}
-                  secureTextEntry
                 />
                 {touched.password && errors.password && (
                   <Text style={styles.errorText}>{errors.password}</Text>
@@ -94,7 +93,7 @@ const SignIn = () => {
           </Formik>
 
           <YStack alignItems="center" gap="$2" marginTop="auto">
-            <Text>Don't have an account yey?</Text>
+            <Text>Don't have an account yet?</Text>
             <Link href={"/register"} asChild>
               <Button chromeless>Create account</Button>
             </Link>

@@ -35,6 +35,7 @@ export interface LoginValues {
 export interface RegisterValues {
   email: string;
   password: string;
+  name: string;
   accountType?: AccountType;
 }
 
@@ -152,8 +153,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return false;
       }
 
-      setTokenStates(response.data.access_token);
-      await saveAuthToken(response.data.access_token);
+      setTokenStates(response.data.accessToken);
+      await saveAuthToken(response.data.accessToken);
       await saveAccountType(values.accountType);
 
       return true;
@@ -175,7 +176,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (response.status === HttpStatusCode.Created) {
-        await saveAuthToken(response.data.access_token);
+        console.log(`Response data: ${response.data}`);
+        await saveAuthToken(response.data.accessToken);
         return true;
       }
 

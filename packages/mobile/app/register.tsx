@@ -1,11 +1,10 @@
-import { StyleSheet, GestureResponderEvent } from "react-native";
 import React from "react";
-import { Formik, FormikHelpers } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Input, Stack, Text, YStack } from "tamagui";
 import { useMutation } from "react-query";
-import { LoginValues, RegisterValues, useAuth } from "../contexts/AuthContext";
-import { Link } from "expo-router";
+import { RegisterValues, useAuth } from "../contexts/AuthContext";
+import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {};
@@ -23,12 +22,13 @@ interface RegisterFormValues extends RegisterValues {
 const Register = () => {
   const { register } = useAuth();
   const mutations = useMutation(register);
+  const router = useRouter();
 
   const handleSignIn = async (values: RegisterFormValues) => {
     try {
-      console.log(values);
       const { passwordConfirm, ...rest } = values;
       await mutations.mutateAsync(rest);
+      router.replace("/(client)");
     } catch (error) {
       console.error("Sign-in failed", error);
     }
@@ -37,13 +37,14 @@ const Register = () => {
   return (
     <SafeAreaView>
       <YStack paddingHorizontal="$4" gap="$4" height="100%">
-        <Text fontSize={"$10"}>Załóż konto</Text>
+        <Text fontSize={"$9"}>Create an account</Text>
         <Formik
           initialValues={
             {
               email: "",
               password: "",
               passwordConfirm: "",
+              name: "",
             } as RegisterFormValues
           }
           validationSchema={SignInSchema}
@@ -90,6 +91,17 @@ const Register = () => {
               />
               {touched.passwordConfirm && errors.passwordConfirm && (
                 <Text color="red">{errors.passwordConfirm}</Text>
+              )}
+
+              <Input
+                placeholder="Name"
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+                secureTextEntry
+              />
+              {touched.name && errors.name && (
+                <Text color="red">{errors.name}</Text>
               )}
 
               <Button

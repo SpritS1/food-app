@@ -31,10 +31,11 @@ export class AuthService {
     const payload: AuthTokenPayload = {
       userId: user._doc._id,
       email: user._doc.email,
+      name: user._doc.name,
     };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 
@@ -42,6 +43,7 @@ export class AuthService {
     email: string,
     password: string,
     accountType: AccountType,
+    name: string,
   ): Promise<AuthResponse> {
     try {
       if (await this.userModel.findOne({ email })) {
@@ -57,6 +59,7 @@ export class AuthService {
         email,
         password: hashedPassword,
         roles,
+        name,
       });
 
       await newUser.save();
@@ -64,7 +67,9 @@ export class AuthService {
       const payload: AuthTokenPayload = {
         userId: newUser._id.toString(),
         email: newUser.email,
+        name: newUser.name,
       };
+
       const accessToken = await this.jwtService.signAsync(payload);
 
       return {

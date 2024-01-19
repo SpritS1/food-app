@@ -20,7 +20,7 @@ export default function ClientHomeScreen() {
     <TouchableWithoutFeedback onPress={handleContainerPress}>
       <SafeAreaView>
         <YStack padding="$4" space="$4">
-          <Text fontSize="$8">Hello {auth.userData?.email}</Text>
+          <Text fontSize="$8">Hello {auth.userData?.name}</Text>
           <Text fontSize="$9" fontWeight={"600"}>
             Gdzie dzisiaj zjemy?
           </Text>

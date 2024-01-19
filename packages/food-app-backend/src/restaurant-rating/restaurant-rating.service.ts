@@ -44,7 +44,7 @@ export class RestaurantRatingService {
           _id: rating._id,
           rating: rating.rating,
           comment: rating.comment,
-          user_name: rating.user.email,
+          user_name: rating.user.name,
           createdAt: rating.createdAt,
         }) as RestaurantRatingDTO,
     );

@@ -25,6 +25,7 @@ export default function TabTwoScreen() {
   const auth = useAuth();
 
   const handleAccountTypeChange = () => {
+    auth.logout();
     router.replace("/");
   };
 
@@ -33,17 +34,17 @@ export default function TabTwoScreen() {
       <YStack space="$4">
         <YStack space padding="$4">
           {auth.userData ? (
-            <Text fontSize="$8">Hello {auth.userData?.email}</Text>
+            <Text fontSize="$8">Hello {auth.userData?.name}!</Text>
           ) : (
             <YStack space>
               <Stack space>
-                <Text fontSize="$8">Twoje konto</Text>
+                <Text fontSize="$8">Your account</Text>
                 <Text fontSize="$5">
-                  Zaloguj się aby móc korzystać z wszystkich funkcji aplikacji
+                  Sign in or create an account to access all features
                 </Text>
               </Stack>
               <Link href="/sign-in" asChild>
-                <Button color="orange">Zaloguj się lub zarejestruj</Button>
+                <Button color="orange">Login or register</Button>
               </Link>
             </YStack>
           )}

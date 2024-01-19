@@ -31,7 +31,8 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('accountType') accountType: AccountType,
+    @Body('name') name: string,
   ): Promise<{ accessToken: string }> {
-    return this.authService.register(email, password, accountType);
+    return this.authService.register(email, password, accountType, name);
   }
 }
