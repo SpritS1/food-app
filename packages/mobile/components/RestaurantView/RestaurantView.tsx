@@ -17,6 +17,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import useModal from "../../hooks/useModal";
 import AddReviewModal from "./Modals/AddReviewModal";
 import ReviewsModal from "./Modals/ReviewsModal";
+import dayjs from "dayjs";
 
 type Props = { restaurant: Restaurant; ownerView?: boolean };
 
@@ -110,7 +111,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                 >
                   <FontAwesome5 name="star" size="20" color="orange" />
                   <Text fontSize={"$8"}>
-                    {restaurant.ratingInfo.ratingsCount == 0
+                    {restaurant?.ratingInfo?.ratingsCount == 0
                       ? "-"
                       : restaurant.ratingInfo.averageRating}
                   </Text>
@@ -119,7 +120,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                 <YStack justifyContent="center" space="$1">
                   <Text fontSize={"$3"}>Awesome</Text>
                   <Text fontSize={"$2"} color="$color11">
-                    {restaurant.ratingInfo.ratingsCount} reviews
+                    {restaurant?.ratingInfo?.ratingsCount} reviews
                   </Text>
                 </YStack>
               </XStack>
@@ -143,6 +144,20 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   Read the reviews
                 </Button>
               </XStack>
+            </YStack>
+
+            <Divider />
+
+            <YStack space>
+              <Text fontSize="$6" fontWeight="bold">
+                Opening hours
+              </Text>
+              {Object.entries(restaurant.openingHours).map(([day, hours]) => (
+                <Text key={day}>
+                  {day}: {dayjs(hours.open).format("HH:mm")} -{" "}
+                  {dayjs(hours.close).format("HH:mm")}
+                </Text>
+              ))}
             </YStack>
           </Stack>
         </ScrollView>

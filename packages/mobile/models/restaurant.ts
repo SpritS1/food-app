@@ -1,4 +1,5 @@
 import { CuisineDTO } from "../../shared/src/dtos/CuisineDTO";
+import { DaysOfWeek } from "../enums/daysOfWeek.enum";
 
 export type Restaurant = {
   _id: string;
@@ -15,4 +16,5 @@ export type Restaurant = {
     averageRating: number;
     ratingsCount: number;
   };
+  openingHours: Record<DaysOfWeek, { open: Date; close: Date }>;
 };

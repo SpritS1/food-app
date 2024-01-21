@@ -11,6 +11,7 @@ import {
   UploadedFile,
   Query,
   UnauthorizedException,
+  Put,
 } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
@@ -20,6 +21,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { DaysOfWeek } from 'src/enums/daysOfWeek.enum';
 
 @Controller('restaurant')
 export class RestaurantController {
@@ -56,6 +58,18 @@ export class RestaurantController {
       userId,
       mainImage,
     );
+  }
+
+  @Roles(Role.BusinessOwner)
+  @Put(':id/opening-hours')
+  async updateOpeningHours(
+    @Param('id') id: Types.ObjectId,
+    @Body()
+    body: {
+      openingHours: Record<DaysOfWeek, { open: Date; close: Date }>;
+    },
+  ) {
+    return this.restaurantService.updateOpeningHours(id, body.openingHours);
   }
 
   @Roles(Role.BusinessOwner)

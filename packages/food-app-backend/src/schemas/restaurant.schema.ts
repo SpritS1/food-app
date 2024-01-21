@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
+import { DaysOfWeek } from 'src/enums/daysOfWeek.enum';
 
 export type RestaurantDocument = HydratedDocument<Restaurant>;
 
@@ -31,6 +32,11 @@ export class Restaurant {
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   owner: Types.ObjectId;
+
+  @Prop({
+    type: Object,
+  })
+  openingHours: Record<DaysOfWeek, { open: Date; close: Date }>;
 }
 
 export const RestaurantSchema = SchemaFactory.createForClass(Restaurant);

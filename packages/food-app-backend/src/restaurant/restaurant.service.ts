@@ -8,6 +8,8 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Cuisine } from 'src/schemas/cuisine.schema';
 import { RestaurantRatingService } from 'src/restaurant-rating/restaurant-rating.service';
+import { DaysOfWeek } from 'src/enums/daysOfWeek.enum';
+import dayjs, { Dayjs } from 'dayjs';
 
 @Injectable()
 export class RestaurantService {
@@ -104,5 +106,57 @@ export class RestaurantService {
 
   remove(id: ObjectId) {
     throw new Error('Method not implemented.');
+  }
+
+  async updateOpeningHours(
+    id: Types.ObjectId,
+    openingHours: Record<DaysOfWeek, { open: Date; close: Date }>,
+  ) {
+    const restaurant = await this.restaurantModel.findById(id);
+
+    if (!restaurant.openingHours) {
+      restaurant.openingHours = {
+        [DaysOfWeek.Monday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Tuesday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Wednesday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Thursday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Friday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Saturday]: {
+          open: null,
+          close: null,
+        },
+        [DaysOfWeek.Sunday]: {
+          open: null,
+          close: null,
+        },
+      };
+    }
+
+    for (const day in openingHours) {
+      if (openingHours.hasOwnProperty(day)) {
+        const { open, close } = openingHours[day];
+
+        restaurant.openingHours[day].open = open;
+        restaurant.openingHours[day].close = close;
+      }
+    }
+
+    await restaurant.save();
+    return restaurant;
   }
 }

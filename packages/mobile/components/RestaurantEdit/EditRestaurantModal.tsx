@@ -12,6 +12,7 @@ import MenuItem from "./MenuItem";
 import useModal from "../../hooks/useModal";
 import EditDataModal from "./EditDataModal";
 import { Restaurant } from "../../models/restaurant";
+import EditOpeningHoursModal from "./EditOpeningHoursModal";
 
 type Props = {
   visible: boolean;
@@ -31,7 +32,8 @@ const EditRestaurantModal = ({
     hideModal: hideEditData,
     showModal: showEditData,
   } = useModal();
-  // const [editImagesModalVisible, setEditImagesModalVisible] = useState(false);
+
+  const hoursModal = useModal();
 
   return (
     <Modal
@@ -61,6 +63,11 @@ const EditRestaurantModal = ({
 
                 <MenuItem text="Edit data" icon="edit" onPress={showEditData} />
                 <MenuItem text="Edit images" icon="images" />
+                <MenuItem
+                  text="Edit opening hours"
+                  icon="clock"
+                  onPress={hoursModal.showModal}
+                />
                 <MenuItem text="Edit menu" icon="utensils" />
                 <MenuItem text="Hide" icon="eye-slash" />
                 <MenuItem text="Delete" icon="trash" />
@@ -80,6 +87,12 @@ const EditRestaurantModal = ({
           onHide={hideEditData}
           restaurant={restaurant}
           onEditSuccess={onEditSuccess}
+        />
+
+        <EditOpeningHoursModal
+          visible={hoursModal.visible}
+          onHide={hoursModal.hideModal}
+          restaurantId={restaurant._id}
         />
       </>
     </Modal>
