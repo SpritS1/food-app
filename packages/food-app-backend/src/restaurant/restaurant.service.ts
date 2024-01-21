@@ -78,11 +78,11 @@ export class RestaurantService {
       .findById(id)
       .populate('cuisine');
 
-    const avgRating = await this.ratingService.getAverageRating(id);
+    const ratingInfo = await this.ratingService.getAverageRating(id);
 
     return {
       ...restaurant.toJSON(),
-      avgRating,
+      ratingInfo,
     };
   }
 
