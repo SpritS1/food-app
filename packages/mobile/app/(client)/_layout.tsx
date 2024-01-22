@@ -49,6 +49,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
+          title: "Search",
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
           unmountOnBlur: false,
         }}
@@ -56,7 +57,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="bookings"
         options={{
-          title: "Rezerwacje",
+          title: "Bookings",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="calendar" color={color} />
           ),
@@ -65,14 +66,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="favourites"
         options={{
-          title: "Ulubione",
+          title: "Favourites",
           tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profil",
+          title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           headerShown: false,
         }}

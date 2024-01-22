@@ -12,10 +12,15 @@ import {
 import { UsersService } from './users.service';
 import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
 import { Restaurant } from 'src/schemas/restaurant.schema';
+import { Reservation } from 'src/schemas/reservation.schema';
+import { ReservationService } from 'src/reservation/reservation.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private reservationService: ReservationService,
+  ) {}
 
   @Get('profile')
   getProfile(@Req() req) {
@@ -80,5 +85,13 @@ export class UsersController {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ message: error.message });
     }
+  }
+
+  @UseGuards(OwnershipGuard)
+  @Get(':id/reservations')
+  async getUserReservations(
+    @Param('id') userId: string,
+  ): Promise<Reservation[]> {
+    return await this.reservationService.getUserReservations(userId);
   }
 }

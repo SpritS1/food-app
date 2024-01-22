@@ -19,6 +19,7 @@ import AddReviewModal from "./Modals/AddReviewModal";
 import ReviewsModal from "./Modals/ReviewsModal";
 import dayjs from "dayjs";
 import Section from "./Section";
+import CreateReservationModal from "./Modals/CreateReservationModal";
 
 type Props = { restaurant: Restaurant; ownerView?: boolean };
 
@@ -35,6 +36,8 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
     showModal: showReviewsModal,
   } = useModal();
 
+  const reservationModal = useModal();
+
   return (
     <>
       <ReviewsModal
@@ -49,6 +52,12 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
         onHide={hideAddModal}
         visible={addModalVisible}
         restaurantId={restaurant._id}
+      />
+
+      <CreateReservationModal
+        onHide={reservationModal.hideModal}
+        visible={reservationModal.visible}
+        restaurant={restaurant}
       />
 
       <Theme name="dark">
@@ -158,7 +167,13 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
         </ScrollView>
 
         {!ownerView && (
-          <Button position="absolute" bottom="$4" right="$4" theme={"orange"}>
+          <Button
+            onPress={reservationModal.showModal}
+            position="absolute"
+            bottom="$4"
+            right="$4"
+            theme={"orange"}
+          >
             Book a table
           </Button>
         )}

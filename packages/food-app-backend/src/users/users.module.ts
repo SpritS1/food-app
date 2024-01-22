@@ -6,6 +6,7 @@ import { UsersController } from './users.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { Restaurant, RestaurantSchema } from 'src/schemas/restaurant.schema';
 import { RestaurantRatingModule } from 'src/restaurant-rating/restaurant-rating.module';
+import { ReservationModule } from 'src/reservation/reservation.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { RestaurantRatingModule } from 'src/restaurant-rating/restaurant-rating.
       { name: Restaurant.name, schema: RestaurantSchema },
     ]),
     RestaurantRatingModule,
+    ReservationModule,
   ],
   providers: [UsersService, AuthService],
   exports: [UsersService],

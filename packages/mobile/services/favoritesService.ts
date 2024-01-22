@@ -7,8 +7,6 @@ export const fetchFavorites = async (userId: string) => {
       `/users/${userId}/favorites`
     );
 
-    console.log(response.data);
-
     return response.data;
   } catch (error) {
     console.error("Error fetching favorites:", error);
