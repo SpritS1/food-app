@@ -18,6 +18,7 @@ import useModal from "../../hooks/useModal";
 import AddReviewModal from "./Modals/AddReviewModal";
 import ReviewsModal from "./Modals/ReviewsModal";
 import dayjs from "dayjs";
+import Section from "./Section";
 
 type Props = { restaurant: Restaurant; ownerView?: boolean };
 
@@ -77,29 +78,20 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
 
             <Divider />
 
-            <Stack space="$2">
-              <Text fontSize="$6" fontWeight="bold">
-                About
-              </Text>
+            <Section title="About">
               <Text>{restaurant?.description}</Text>
-            </Stack>
+            </Section>
 
             <Divider />
 
-            <Stack space="$4">
-              <Text fontSize="$6" fontWeight="bold">
-                Contact
-              </Text>
+            <Section title="Contact">
               <InfoItem text={restaurant?.phone} iconName="phone" />
               <InfoItem text={restaurant?.email} iconName="envelope" />
-            </Stack>
+            </Section>
 
             <Divider />
 
-            <YStack space>
-              <Text fontSize="$6" fontWeight="bold">
-                Reviews
-              </Text>
+            <Section title="Reviews">
               <XStack space>
                 <XStack
                   backgroundColor="$orange5"
@@ -144,21 +136,24 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   Read the reviews
                 </Button>
               </XStack>
-            </YStack>
+            </Section>
 
-            <Divider />
+            {restaurant.openingHours && (
+              <Stack space>
+                <Divider />
 
-            <YStack space>
-              <Text fontSize="$6" fontWeight="bold">
-                Opening hours
-              </Text>
-              {Object.entries(restaurant.openingHours).map(([day, hours]) => (
-                <Text key={day}>
-                  {day}: {dayjs(hours.open).format("HH:mm")} -{" "}
-                  {dayjs(hours.close).format("HH:mm")}
-                </Text>
-              ))}
-            </YStack>
+                <Section title="Opening hours">
+                  {Object.entries(restaurant.openingHours).map(
+                    ([day, hours]) => (
+                      <Text key={day}>
+                        {day}: {dayjs(hours.open).format("HH:mm")} -{" "}
+                        {dayjs(hours.close).format("HH:mm")}
+                      </Text>
+                    )
+                  )}
+                </Section>
+              </Stack>
+            )}
           </Stack>
         </ScrollView>
 
