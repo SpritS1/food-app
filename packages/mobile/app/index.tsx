@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { StyleSheet } from "react-native";
+import { LogBox, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, Button, Image, YStack, Stack } from "tamagui";
 import { SplashScreen as ExpoSplashScreen, router } from "expo-router";
@@ -15,8 +15,8 @@ const StartScreen = (props: Props) => {
   const { initialized, authToken, accountType } = useAuth();
 
   const onLayoutRootView = useCallback(async () => {
+    // LogBox.ignoreAllLogs();
     if (initialized) {
-      console.log(`Account type: ${accountType} - ${authToken}`);
       if (authToken) {
         if (accountType === "business") router.replace("/(owner)");
         else if (accountType === "regular") router.replace("/(client)");

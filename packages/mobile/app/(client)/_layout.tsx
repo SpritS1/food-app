@@ -27,6 +27,7 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: "Home",
+          unmountOnBlur: true,
           tabBarIcon: ({ color }) => (
             <Ionicons name="restaurant" size={24} color={color} />
           ),

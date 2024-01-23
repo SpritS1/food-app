@@ -130,7 +130,7 @@ const ReservationCard = ({ reservation, refetchData, ownerView }: Props) => {
         <XStack space justifyContent="space-between" flex={1}>
           <YStack space="$2">
             <Text fontSize={"$6"} fontWeight={"bold"}>
-              {reservation.restaurant.name}
+              Test
             </Text>
             <Text fontSize={"$5"}>{reservation.restaurant.city}</Text>
           </YStack>

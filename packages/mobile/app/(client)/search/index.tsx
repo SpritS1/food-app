@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Input, ScrollView, Stack, Text, XStack, YStack } from "tamagui";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Input,
+  ScrollView,
+  Stack,
+  Text,
+  XStack,
+  YStack,
+} from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "react-query";
 import ModalSelectButton from "../../../components/ModalSelectButton";
@@ -12,6 +20,8 @@ import { fetchFavorites } from "../../../services/favoritesService";
 import { fetchRestaurants } from "../../../services/restaurantService";
 import SearchCuisineModal from "../../../components/SearchCuisineModal";
 import { CuisineDTO } from "../../../../shared/src/dtos/CuisineDTO";
+import { Restaurant } from "../../../models/restaurant";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {};
 
@@ -38,6 +48,43 @@ const search = (props: Props) => {
   const favoritesQuery = useQuery(["favorites", auth.userData?.userId], () =>
     fetchFavorites(auth.userData?.userId || "")
   );
+
+  const [recentlyViewed, setRecentlyViewed] = useState<Restaurant[]>([]);
+
+  const handleRestaurantPress = async (restaurant: Restaurant) => {
+    const isAlreadyViewed = recentlyViewed.some(
+      (viewedRestaurant) => viewedRestaurant._id === restaurant._id
+    );
+
+    if (!isAlreadyViewed) {
+      const updatedRecentlyViewed = [restaurant, ...recentlyViewed];
+      setRecentlyViewed(updatedRecentlyViewed);
+
+      await AsyncStorage.setItem(
+        "recentlyViewedRestaurants",
+        JSON.stringify(updatedRecentlyViewed)
+      );
+    }
+  };
+
+  const clearRecentlyViewed = async () => {
+    setRecentlyViewed([]);
+    await AsyncStorage.removeItem("recentlyViewedRestaurants");
+  };
+
+  useEffect(() => {
+    const loadRecentlyViewed = async () => {
+      const recentlyViewedString = await AsyncStorage.getItem(
+        "recentlyViewedRestaurants"
+      );
+      const recentlyViewedArray = recentlyViewedString
+        ? JSON.parse(recentlyViewedString)
+        : [];
+      setRecentlyViewed(recentlyViewedArray);
+    };
+
+    loadRecentlyViewed();
+  }, []);
 
   return (
     <SafeAreaView>
@@ -78,10 +125,33 @@ const search = (props: Props) => {
           </XStack>
         </YStack>
 
-        {searchingDisbaled && (
-          <Text fontSize={"$6"} textAlign="center">
-            Write some details about restaurant you're looking for!
-          </Text>
+        {recentlyViewed.length > 0 && searchingDisbaled && (
+          <YStack space>
+            <XStack justifyContent="space-between" alignItems="center">
+              <Text fontSize="$6">Recently viewed</Text>
+              <Button size="$3" onPress={clearRecentlyViewed}>
+                Clear
+              </Button>
+            </XStack>
+
+            <ScrollView space horizontal>
+              {recentlyViewed.map((restaurant) => (
+                <Link
+                  href={`/(client)/search/${restaurant._id}`}
+                  key={restaurant._id}
+                  asChild
+                >
+                  <ClientRestaurantCard
+                    key={restaurant._id}
+                    restaurant={restaurant}
+                    isFavourite={favoritesQuery.data?.some(
+                      (fav) => fav._id === restaurant._id
+                    )}
+                  />
+                </Link>
+              ))}
+            </ScrollView>
+          </YStack>
         )}
 
         <ScrollView space>
@@ -90,6 +160,7 @@ const search = (props: Props) => {
               href={`/(client)/search/${restaurant._id}`}
               key={restaurant._id}
               asChild
+              onPress={() => handleRestaurantPress(restaurant)}
             >
               <ClientRestaurantCard
                 key={restaurant._id}
