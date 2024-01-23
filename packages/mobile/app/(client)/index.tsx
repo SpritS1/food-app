@@ -83,7 +83,7 @@ export default function ClientHomeScreen() {
                     );
                   })
                   .map((reservation) => (
-                    <Link href="/(client)/bookings">
+                    <Link href="/(client)/bookings" key={reservation._id}>
                       <HomePageReservationCard
                         key={reservation._id}
                         reservation={reservation}
