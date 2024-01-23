@@ -7,3 +7,10 @@ export const getUserReservations = async (userId: string) => {
   );
   return response.data;
 };
+
+export const getOwnerReservations = async (userId: string) => {
+  const response = await axios.get<Reservation[]>(
+    `/users/${userId}/owner-reservations`
+  );
+  return response.data;
+};

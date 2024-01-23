@@ -4,9 +4,17 @@ import { Text, XStack, YStack } from "tamagui";
 import { Reservation } from "../models/reservation";
 import dayjs from "dayjs";
 import { useMutation } from "react-query";
-import { cancelReservation } from "../services/reservationService";
+import {
+  cancelReservation,
+  confirmReservation,
+} from "../services/reservationService";
+import Divider from "./Divider";
 
-type Props = { reservation: Reservation; refetchData: () => void };
+type Props = {
+  reservation: Reservation;
+  refetchData?: () => void;
+  ownerView?: boolean;
+};
 
 const getBgColor = (isCancelled: boolean, isConfirmed: boolean) => {
   if (isCancelled) return "$red5";
@@ -20,12 +28,70 @@ const getText = (isCancelled: boolean, isConfirmed: boolean) => {
   return "Awaiting confirmation";
 };
 
-const ReservationCard = ({ reservation, refetchData }: Props) => {
-  const mutation = useMutation((reservationId: string) =>
+const ReservationCard = ({ reservation, refetchData, ownerView }: Props) => {
+  const cancelMutation = useMutation((reservationId: string) =>
     cancelReservation(reservationId)
   );
 
+  const confirmMutation = useMutation((reservationId: string) =>
+    confirmReservation(reservationId)
+  );
+
   const handleCardPress = () => {
+    if (ownerView) {
+      if (reservation.isConfirmed) {
+        Alert.alert(
+          "Reservation Options",
+          "Choose an action",
+          [
+            {
+              text: "Cancel Reservation",
+              onPress: async () => {
+                await cancelMutation.mutateAsync(reservation._id);
+                refetchData?.();
+              },
+            },
+            {
+              isPreferred: true,
+              text: "Close",
+              style: "cancel",
+            },
+          ],
+          { cancelable: true }
+        );
+        return;
+      }
+
+      Alert.alert(
+        "Reservation Options",
+        "Choose an action",
+        [
+          {
+            text: "Confirm Reservation",
+            isPreferred: true,
+            onPress: async () => {
+              await confirmMutation.mutateAsync(reservation._id);
+              refetchData?.();
+            },
+          },
+          {
+            text: "Cancel Reservation",
+            onPress: async () => {
+              await cancelMutation.mutateAsync(reservation._id);
+              refetchData?.();
+            },
+          },
+          {
+            isPreferred: true,
+            text: "Close",
+            style: "cancel",
+          },
+        ],
+        { cancelable: true }
+      );
+      return;
+    }
+
     Alert.alert(
       "Reservation Options",
       "Choose an action",
@@ -33,16 +99,11 @@ const ReservationCard = ({ reservation, refetchData }: Props) => {
         {
           text: "Cancel Reservation",
           onPress: async () => {
-            await mutation.mutateAsync(reservation._id);
-            refetchData();
+            await cancelMutation.mutateAsync(reservation._id);
+            refetchData?.();
           },
         },
-        // {
-        //   text: "View Details",
-        //   onPress: () => console.log("View Details pressed"),
-        // },
         {
-          isPreferred: true,
           text: "Close",
           style: "cancel",
         },
@@ -67,7 +128,12 @@ const ReservationCard = ({ reservation, refetchData }: Props) => {
         space
       >
         <XStack space justifyContent="space-between" flex={1}>
-          <Text fontSize={"$6"}>{reservation.restaurant.name}</Text>
+          <YStack space="$2">
+            <Text fontSize={"$6"} fontWeight={"bold"}>
+              {reservation.restaurant.name}
+            </Text>
+            <Text fontSize={"$5"}>{reservation.restaurant.city}</Text>
+          </YStack>
           <Text>{dayjs(reservation.reservationDate).format("DD/MM/YYYY")}</Text>
         </XStack>
         <XStack space justifyContent="space-between" flex={1}>
@@ -76,6 +142,13 @@ const ReservationCard = ({ reservation, refetchData }: Props) => {
             {getText(reservation.isCancelled, reservation.isConfirmed)}
           </Text>
         </XStack>
+
+        {reservation.additionalNotes && (
+          <YStack space="$2">
+            <Text fontSize="$5">Additional Notes</Text>
+            <Text>{reservation.additionalNotes}</Text>
+          </YStack>
+        )}
       </YStack>
     </TouchableOpacity>
   );

@@ -94,4 +94,12 @@ export class UsersController {
   ): Promise<Reservation[]> {
     return await this.reservationService.getUserReservations(userId);
   }
+
+  @UseGuards(OwnershipGuard)
+  @Get(':id/owner-reservations')
+  async getOwnerReservations(
+    @Param('id') userId: string,
+  ): Promise<Reservation[]> {
+    return await this.reservationService.getOwnerReservations(userId);
+  }
 }

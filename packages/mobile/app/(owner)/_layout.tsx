@@ -57,6 +57,17 @@ export default function OwnerLayout() {
       />
 
       <Tabs.Screen
+        name="reservations"
+        options={{
+          title: "Reservations",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="book" size={24} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
