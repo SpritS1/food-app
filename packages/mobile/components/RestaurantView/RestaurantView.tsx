@@ -23,6 +23,20 @@ import CreateReservationModal from "./Modals/CreateReservationModal";
 
 type Props = { restaurant: Restaurant; ownerView?: boolean };
 
+function getRestaurantQualityText(rating: number): string {
+  if (rating <= 0) return "No reviews yet";
+
+  if (rating <= 3) return "Poor";
+
+  if (rating <= 6) return "Average";
+
+  if (rating <= 8) return "Good";
+
+  if (rating <= 9) return "Excellent";
+
+  return "Awesome";
+}
+
 const RestaurantView = ({ restaurant, ownerView }: Props) => {
   const {
     visible: addModalVisible,
@@ -119,7 +133,11 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                 </XStack>
 
                 <YStack justifyContent="center" space="$1">
-                  <Text fontSize={"$3"}>Awesome</Text>
+                  <Text fontSize={"$3"}>
+                    {getRestaurantQualityText(
+                      restaurant.ratingInfo.averageRating
+                    )}
+                  </Text>
                   <Text fontSize={"$2"} color="$color11">
                     {restaurant?.ratingInfo?.ratingsCount} reviews
                   </Text>
@@ -141,6 +159,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   icon={<FontAwesome5 name="book" />}
                   variant="outlined"
                   onPress={showReviewsModal}
+                  disabled={restaurant.ratingInfo.ratingsCount === 0}
                 >
                   Read the reviews
                 </Button>
