@@ -24,6 +24,8 @@ export default function TabTwoScreen() {
   const router = useRouter();
   const auth = useAuth();
 
+  const notLoggedIn = !auth.userData;
+
   const handleAccountTypeChange = () => {
     auth.logout();
     router.replace("/");
@@ -61,6 +63,7 @@ export default function TabTwoScreen() {
               icon={User}
               title="Personal data"
               size="$5"
+              disabled={notLoggedIn}
             />
           </YGroup.Item>
           <YGroup.Item>
@@ -70,6 +73,7 @@ export default function TabTwoScreen() {
               icon={Star}
               title="My reviews"
               size="$5"
+              disabled={notLoggedIn}
             />
           </YGroup.Item>
           <YGroup.Item>
@@ -79,6 +83,7 @@ export default function TabTwoScreen() {
               icon={Image}
               title="My images"
               size="$5"
+              disabled={notLoggedIn}
             />
           </YGroup.Item>
           <YGroup.Item>
@@ -88,6 +93,7 @@ export default function TabTwoScreen() {
               pressTheme
               icon={Settings}
               title="Settings"
+              disabled={notLoggedIn}
             />
           </YGroup.Item>
           <YGroup.Item>
@@ -109,6 +115,7 @@ export default function TabTwoScreen() {
               pressTheme
               icon={LogOut}
               title="Logout"
+              disabled={notLoggedIn}
             />
           </YGroup.Item>
           <Separator />

@@ -3,6 +3,7 @@ import { Image, Stack, Text, XStack, YStack } from "tamagui";
 import { Restaurant } from "../../models/restaurant";
 import { TouchableOpacity } from "react-native";
 import FavButton from "./FavButton";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
   restaurant: Restaurant;
@@ -17,6 +18,7 @@ const ClientRestaurantCard = ({
   isFavourite,
   onFavRemove,
 }: Props) => {
+  const auth = useAuth();
   return (
     <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <YStack
@@ -26,11 +28,13 @@ const ClientRestaurantCard = ({
         borderRadius="$4"
       >
         <Stack position="relative">
-          <FavButton
-            restaurantId={restaurant._id}
-            isFavourite={isFavourite}
-            onFavRemove={onFavRemove}
-          />
+          {auth.userData?.userId && (
+            <FavButton
+              restaurantId={restaurant._id}
+              isFavourite={isFavourite}
+              onFavRemove={onFavRemove}
+            />
+          )}
 
           <Image
             source={{

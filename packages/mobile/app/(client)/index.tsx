@@ -10,7 +10,6 @@ import { useQuery } from "react-query";
 import { fetchFavorites } from "../../services/favoritesService";
 import { getUserReservations } from "../../services/userService";
 import dayjs from "dayjs";
-import ReservationCard from "../../components/ReservationCard";
 import HomePageReservationCard from "../../components/HomePageReservationCard";
 
 export default function ClientHomeScreen() {
@@ -20,13 +19,20 @@ export default function ClientHomeScreen() {
     Keyboard.dismiss();
   };
 
-  const favoritesQuery = useQuery(["favorites", auth.userData?.userId], () =>
-    fetchFavorites(auth.userData?.userId || "")
+  const favoritesQuery = useQuery(
+    ["favorites", auth.userData?.userId],
+    () => fetchFavorites(auth.userData?.userId || ""),
+    {
+      enabled: !!auth.userData?.userId,
+    }
   );
 
   const reservationsQuery = useQuery(
     ["reservations", auth.userData?.userId],
-    () => getUserReservations(auth.userData?.userId || "")
+    () => getUserReservations(auth.userData?.userId || ""),
+    {
+      enabled: !!auth.userData?.userId,
+    }
   );
 
   const [recentlyViewed, setRecentlyViewed] = useState<Restaurant[]>([]);
@@ -59,15 +65,18 @@ export default function ClientHomeScreen() {
             Let's find you something to eat!
           </Text>
 
-          <Link href="/(client)/search">
-            <Button color="orange">Find restaurants</Button>
+          <Link href="/(client)/search" asChild>
+            <Button alignSelf="flex-start" color="orange">
+              Find restaurants
+            </Button>
           </Link>
 
           {reservationsQuery.data?.some(
             (reservation) =>
               reservation.isConfirmed &&
               !reservation.isCancelled &&
-              dayjs(reservation.reservationDate).diff(dayjs(), "day") < 3
+              dayjs(reservation.reservationDate).diff(dayjs(), "day") < 3 &&
+              dayjs(reservation.reservationDate).diff(dayjs(), "day") >= 0
           ) && (
             <YStack space>
               <Text fontSize="$6">You have upcoming reservations!</Text>
@@ -79,7 +88,9 @@ export default function ClientHomeScreen() {
                       reservation.isConfirmed &&
                       !reservation.isCancelled &&
                       dayjs(reservation.reservationDate).diff(dayjs(), "day") <
-                        3
+                        3 &&
+                      dayjs(reservation.reservationDate).diff(dayjs(), "day") >=
+                        0
                     );
                   })
                   .map((reservation) => (

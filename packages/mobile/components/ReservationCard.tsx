@@ -129,9 +129,6 @@ const ReservationCard = ({ reservation, refetchData, ownerView }: Props) => {
       >
         <XStack space justifyContent="space-between" flex={1}>
           <YStack space="$2">
-            <Text fontSize={"$6"} fontWeight={"bold"}>
-              Test
-            </Text>
             <Text fontSize={"$5"}>{reservation.restaurant.city}</Text>
           </YStack>
           <Text>{dayjs(reservation.reservationDate).format("DD/MM/YYYY")}</Text>

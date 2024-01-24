@@ -4,7 +4,7 @@ import { fetchFavorites } from "../../services/favoritesService";
 import { useAuth } from "../../contexts/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { ScrollView, Stack, Text } from "tamagui";
+import { Button, ScrollView, Stack, Text } from "tamagui";
 import ClientRestaurantCard from "../../components/ClientRestaurantCard/ClientRestaurantCard";
 
 type Props = {};
@@ -12,9 +12,35 @@ type Props = {};
 const favourites = (props: Props) => {
   const auth = useAuth();
 
-  const favoritesQuery = useQuery(["favorites", auth.userData?.userId], () =>
-    fetchFavorites(auth.userData?.userId || "")
+  const favoritesQuery = useQuery(
+    ["favorites", auth.userData?.userId],
+    () => fetchFavorites(auth.userData?.userId || ""),
+    {
+      enabled: !!auth.userData?.userId,
+    }
   );
+
+  if (!auth.userData?.userId) {
+    return (
+      <SafeAreaView>
+        <Text fontSize={"$8"}>Favourites</Text>
+
+        <Stack
+          justifyContent="center"
+          alignItems="center"
+          height={"100%"}
+          space
+        >
+          <Text fontSize="$8" textAlign="center">
+            You must be logged in to view your favourites
+          </Text>
+          <Link href="/sign-in" asChild>
+            <Button>Sign in</Button>
+          </Link>
+        </Stack>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView>

@@ -45,8 +45,12 @@ const search = (props: Props) => {
     }
   );
 
-  const favoritesQuery = useQuery(["favorites", auth.userData?.userId], () =>
-    fetchFavorites(auth.userData?.userId || "")
+  const favoritesQuery = useQuery(
+    ["favorites", auth.userData?.userId],
+    () => fetchFavorites(auth.userData?.userId || ""),
+    {
+      enabled: !!auth.userData?.userId,
+    }
   );
 
   const [recentlyViewed, setRecentlyViewed] = useState<Restaurant[]>([]);
