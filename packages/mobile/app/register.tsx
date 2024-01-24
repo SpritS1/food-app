@@ -11,8 +11,15 @@ type Props = {};
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string().required("Password is required"),
-  passwordConfirm: Yup.string().required("Password confirmation is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+      "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+    ),
+  passwordConfirm: Yup.string()
+    .required("Password confirmation is required")
+    .oneOf([Yup.ref("password"), ""], "Passwords must match"),
 });
 
 interface RegisterFormValues extends RegisterValues {
@@ -98,7 +105,6 @@ const Register = () => {
                 onChangeText={handleChange("name")}
                 onBlur={handleBlur("name")}
                 value={values.name}
-                secureTextEntry
               />
               {touched.name && errors.name && (
                 <Text color="red">{errors.name}</Text>
@@ -116,9 +122,9 @@ const Register = () => {
         </Formik>
 
         <YStack alignItems="center" gap="$2" marginTop="auto">
-          <Text>Posiadasz już konto?</Text>
+          <Text>Already have an account?</Text>
           <Link href={"/sign-in"} asChild>
-            <Text>Zaloguj się</Text>
+            <Text>Sign in</Text>
           </Link>
         </YStack>
       </YStack>

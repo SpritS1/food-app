@@ -37,7 +37,7 @@ const BusinessLogin = () => {
     <KeyboardHide>
       <SafeAreaView>
         <YStack paddingHorizontal="$4" gap="$4" height="100%">
-          <Text fontSize={"$10"}>Zaloguj się</Text>
+          <Text fontSize={"$10"}>Sign in</Text>
           <Formik
             initialValues={{
               email: email as string,
@@ -88,16 +88,16 @@ const BusinessLogin = () => {
                   }
                   disabled={isSubmitting}
                 >
-                  Dalej
+                  Submit
                 </Button>
               </Stack>
             )}
           </Formik>
 
           <YStack alignItems="center" gap="$2" marginTop="auto">
-            <Text>Nie posiadasz konta?</Text>
+            <Text>Don't have an account yet?</Text>
             <Link href={"/register"} asChild>
-              <Text>Zarejestruj się</Text>
+              <Text>Sign up</Text>
             </Link>
           </YStack>
         </YStack>

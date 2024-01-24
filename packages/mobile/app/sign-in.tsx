@@ -5,7 +5,7 @@ import {
   Keyboard,
 } from "react-native";
 import React from "react";
-import { Formik, FormikHelpers } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { Button, Input, Stack, Text, YStack } from "tamagui";
 import { useMutation } from "react-query";
@@ -72,6 +72,7 @@ const SignIn = () => {
                   onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
                   value={values.password}
+                  secureTextEntry
                 />
                 {touched.password && errors.password && (
                   <Text style={styles.errorText}>{errors.password}</Text>

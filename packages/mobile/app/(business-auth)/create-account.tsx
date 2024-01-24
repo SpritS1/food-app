@@ -19,7 +19,12 @@ const CreateAccount = (props: Props) => {
 
   const CreateAccountSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string()
+      .required("Password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+      ),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), ""], "Passwords must match")
       .required("Confirm Password is required"),
@@ -95,10 +100,11 @@ const CreateAccount = (props: Props) => {
             </YStack>
           )}
         </Formik>
-        <Text>
-          Already have an account?{" "}
+
+        <YStack alignItems="center" gap="$2" marginTop="auto">
+          <Text>Already have an account?</Text>
           <Link href="/(business-auth)/login">Sign in</Link>
-        </Text>
+        </YStack>
       </YStack>
     </SafeAreaView>
   );
