@@ -9,7 +9,6 @@ import { Role } from 'src/enums/role.enum';
 import { Cuisine } from 'src/schemas/cuisine.schema';
 import { RestaurantRatingService } from 'src/restaurant-rating/restaurant-rating.service';
 import { DaysOfWeek } from 'src/enums/daysOfWeek.enum';
-import dayjs, { Dayjs } from 'dayjs';
 
 @Injectable()
 export class RestaurantService {
@@ -96,6 +95,7 @@ export class RestaurantService {
     restaurant.description = updateRestaurantDto.description;
     restaurant.phone = updateRestaurantDto.phone;
     restaurant.email = updateRestaurantDto.email;
+    restaurant.address = updateRestaurantDto.address;
     restaurant.cuisine = await this.cuisineModel.findById(
       updateRestaurantDto.cuisine,
     );

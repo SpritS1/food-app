@@ -95,7 +95,12 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
           <Stack backgroundColor={"$background"} padding="$4" space="$4">
             <Text fontSize="$9">{restaurant?.name}</Text>
 
-            <InfoItem text={`${restaurant?.city}`} iconName="map-marker-alt" />
+            <InfoItem
+              text={`${restaurant?.city}${
+                restaurant?.address ? `, ${restaurant.address}` : ""
+              }`}
+              iconName="map-marker-alt"
+            />
             <InfoItem text={restaurant?.cuisine.name} iconName="utensils" />
             {/* <InfoItem text={"Average price 85 $"} iconName="money-bill" /> */}
 

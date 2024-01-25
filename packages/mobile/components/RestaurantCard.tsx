@@ -37,10 +37,14 @@ const RestaurantCard = React.forwardRef<TouchableOpacity, Props>(
             <Text fontSize={"$7"} ellipse>
               {restaurant.name}
             </Text>
-            <Text>{restaurant.city}</Text>
             <Text>
-              Visible <FontAwesome5 name="eye" />
+              {`${restaurant?.city}${
+                restaurant?.address ? `, ${restaurant.address}` : ""
+              }`}
             </Text>
+            {/* <Text>
+              Visible <FontAwesome5 name="eye" />
+            </Text> */}
           </Stack>
         </Stack>
       </TouchableOpacity>

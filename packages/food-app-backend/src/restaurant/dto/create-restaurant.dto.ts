@@ -25,4 +25,8 @@ export class CreateRestaurantDto {
   @IsArray()
   @IsString({ each: true })
   cuisine: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  address: string;
 }

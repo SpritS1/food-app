@@ -40,6 +40,7 @@ interface FormValues {
   email: string;
   cuisine: CuisineDTO;
   mainImage: ImagePickerAsset;
+  address: string;
 }
 
 const restaurantSchema = Yup.object().shape({
@@ -52,7 +53,7 @@ const restaurantSchema = Yup.object().shape({
 });
 
 const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
-  const { name, city, description, phone, email, mainImage, cuisine } =
+  const { name, city, description, phone, email, mainImage, cuisine, address } =
     createRestaurantDto;
 
   const formData = new FormData();
@@ -63,6 +64,7 @@ const addRestaurant = async (createRestaurantDto: CreateRestaurantDto) => {
   formData.append("phone", phone);
   formData.append("email", email);
   formData.append("cuisine", cuisine);
+  formData.append("address", address);
 
   if (mainImage) {
     formData.append("mainImage", {
@@ -182,6 +184,7 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                 city: "",
                 description: "Best kebab in town!",
                 phone: "123123123",
+                address: "Mariacka 7",
                 email: "mateuszpenkala@gmail.com",
               } as FormValues
             }
@@ -257,6 +260,16 @@ const AddRestaurantModal = ({ visible, onHide, onAddSuccess }: Props) => {
                   />
                   {touched.phone && errors.phone && (
                     <Text color="$red10">{errors.phone}</Text>
+                  )}
+
+                  <Input
+                    onChangeText={handleChange("address")}
+                    onBlur={handleBlur("address")}
+                    value={values.address}
+                    placeholder="Address"
+                  />
+                  {touched.address && errors.address && (
+                    <Text color="$red10">{errors.address}</Text>
                   )}
 
                   <Input

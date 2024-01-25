@@ -27,6 +27,7 @@ interface FormValues {
   city: string;
   description: string;
   phone: string;
+  address: string;
   email: string;
   cuisine: CuisineDTO;
 }
@@ -38,13 +39,13 @@ const restaurantSchema = Yup.object().shape({
   phone: Yup.string().required("Phone number is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   cuisine: Yup.object().required("Cuisine is required"),
+  address: Yup.string().required("Address is required"),
 });
 
 const editRestaurant = async (
   updateRestaurantData: UpdateRestaurantDataDto
 ) => {
-  const { name, city, description, phone, email, _id, cuisine } =
-    updateRestaurantData;
+  const { _id } = updateRestaurantData;
 
   const response = await axios.patch(
     `/restaurant/${_id}`,
@@ -125,6 +126,7 @@ const EditDataModal = ({
                 phone: restaurant.phone,
                 email: restaurant.email,
                 cuisine: restaurant.cuisine,
+                address: restaurant.address,
               } as FormValues
             }
             validationSchema={restaurantSchema}
@@ -202,6 +204,16 @@ const EditDataModal = ({
                   )}
 
                   <Input
+                    onChangeText={handleChange("address")}
+                    onBlur={handleBlur("address")}
+                    value={values.address}
+                    placeholder="Address"
+                  />
+                  {touched.address && errors.address && (
+                    <Text color="$red10">{errors.address}</Text>
+                  )}
+
+                  <Input
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
                     value={values.email}
@@ -216,7 +228,7 @@ const EditDataModal = ({
                     theme={"orange"}
                     marginTop="auto"
                   >
-                    Create restaurant
+                    Submit
                   </Button>
                 </YStack>
               </>

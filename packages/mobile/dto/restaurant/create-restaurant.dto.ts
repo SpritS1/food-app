@@ -8,4 +8,5 @@ export interface CreateRestaurantDto {
   email: string;
   cuisine: string;
   mainImage: ImagePickerAsset;
+  address: string;
 }
