@@ -13,6 +13,9 @@ import useModal from "../../hooks/useModal";
 import EditDataModal from "./EditDataModal";
 import { Restaurant } from "../../models/restaurant";
 import EditOpeningHoursModal from "./EditOpeningHoursModal";
+import { useMutation } from "react-query";
+import { removeRestaurant } from "../../services/restaurantService";
+import { router } from "expo-router";
 
 type Props = {
   visible: boolean;
@@ -34,6 +37,13 @@ const EditRestaurantModal = ({
   } = useModal();
 
   const hoursModal = useModal();
+
+  const removeMutation = useMutation(removeRestaurant);
+
+  const handleDeletePress = async () => {
+    await removeMutation.mutateAsync(restaurant._id);
+    router.push("/(owner)/restaurants");
+  };
 
   return (
     <Modal
@@ -70,7 +80,11 @@ const EditRestaurantModal = ({
                 />
                 <MenuItem text="Edit menu" icon="utensils" />
                 <MenuItem text="Hide" icon="eye-slash" />
-                <MenuItem text="Delete" icon="trash" />
+                <MenuItem
+                  text="Delete"
+                  icon="trash"
+                  onPress={handleDeletePress}
+                />
               </ScrollView>
 
               <TouchableOpacity onPress={onHide}>

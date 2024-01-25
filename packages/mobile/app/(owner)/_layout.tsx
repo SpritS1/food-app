@@ -18,6 +18,7 @@ export default function OwnerLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        unmountOnBlur: false,
       }}
     >
       <Tabs.Screen

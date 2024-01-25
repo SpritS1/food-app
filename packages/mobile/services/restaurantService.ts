@@ -11,3 +11,7 @@ export const fetchRestaurants = async (
   );
   return response.data;
 };
+
+export const removeRestaurant = async (id: string) => {
+  await axios.delete(`/restaurant/${id}`);
+};

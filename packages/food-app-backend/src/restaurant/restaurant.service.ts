@@ -104,8 +104,8 @@ export class RestaurantService {
     return restaurant;
   }
 
-  remove(id: ObjectId) {
-    throw new Error('Method not implemented.');
+  async remove(id: ObjectId) {
+    await this.restaurantModel.findByIdAndDelete(id);
   }
 
   async updateOpeningHours(

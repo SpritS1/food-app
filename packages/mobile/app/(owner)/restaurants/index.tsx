@@ -12,7 +12,7 @@ import {
   YStack,
 } from "tamagui";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
+import { Link, useSegments } from "expo-router";
 import RestaurantCard from "../../../components/RestaurantCard";
 import { useAuth } from "../../../contexts/AuthContext";
 import { Plus } from "@tamagui/lucide-icons";
@@ -43,6 +43,12 @@ const restaurants = (props: Props) => {
     "ownedRestaurants",
     () => fetchOwnedRestaurants(auth.userData?.userId)
   );
+
+  const segments = useSegments();
+
+  useEffect(() => {
+    refetch();
+  }, [segments]);
 
   const [refreshing, setRefreshing] = React.useState(false);
 
