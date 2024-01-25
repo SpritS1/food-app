@@ -85,8 +85,7 @@ const EditRestaurantModal = ({
                   icon="clock"
                   onPress={hoursModal.showModal}
                 />
-                {/* <MenuItem text="Edit menu" icon="utensils" />
-                <MenuItem text="Hide" icon="eye-slash" /> */}
+
                 <MenuItem
                   text="Delete"
                   icon="trash"

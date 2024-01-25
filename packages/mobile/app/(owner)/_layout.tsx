@@ -68,14 +68,14 @@ export default function OwnerLayout() {
         }}
       />
 
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           headerShown: false,
         }}
-      />
+      /> */}
     </Tabs>
   );
 }
