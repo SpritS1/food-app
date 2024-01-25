@@ -24,11 +24,15 @@ export default function ProfileScreen() {
   const router = useRouter();
   const auth = useAuth();
 
-  const notLoggedIn = !auth.userData;
+  const loggedIn = auth.userData;
 
   const handleAccountTypeChange = () => {
     auth.logout();
     router.replace("/");
+  };
+
+  const handleMyReviewsPress = () => {
+    router.push("/(client)/profile/reviews");
   };
 
   return (
@@ -55,7 +59,7 @@ export default function ProfileScreen() {
         <YGroup>
           <Separator />
 
-          <YGroup.Item>
+          {/* <YGroup.Item>
             <Link href="/(client)/profile/settings" asChild>
               <ListItem
                 size="$5"
@@ -63,21 +67,20 @@ export default function ProfileScreen() {
                 pressTheme
                 icon={Settings}
                 title="Settings"
-                disabled={notLoggedIn}
+                disabled={!loggedIn}
               />
             </Link>
-          </YGroup.Item>
+          </YGroup.Item> */}
           <YGroup.Item>
-            <Link href="/(client)/profile/reviews" asChild>
-              <ListItem
-                hoverTheme
-                pressTheme
-                icon={Star}
-                title="My reviews"
-                size="$5"
-                disabled={notLoggedIn}
-              />
-            </Link>
+            <ListItem
+              hoverTheme
+              pressTheme
+              icon={Star}
+              title="My reviews"
+              size="$5"
+              disabled={!loggedIn}
+              onPress={handleMyReviewsPress}
+            />
           </YGroup.Item>
           {/* <YGroup.Item>
             <ListItem
@@ -86,7 +89,7 @@ export default function ProfileScreen() {
               icon={Image}
               title="My images"
               size="$5"
-              disabled={notLoggedIn}
+              disabled={!loggedIn}
             />
           </YGroup.Item>
           <YGroup.Item>
@@ -96,7 +99,7 @@ export default function ProfileScreen() {
               pressTheme
               icon={Settings}
               title="Settings"
-              disabled={notLoggedIn}
+              disabled={!loggedIn}
             />
           </YGroup.Item> */}
           <YGroup.Item>
@@ -118,7 +121,7 @@ export default function ProfileScreen() {
               pressTheme
               icon={LogOut}
               title="Logout"
-              disabled={notLoggedIn}
+              disabled={!loggedIn}
             />
           </YGroup.Item>
           <Separator />

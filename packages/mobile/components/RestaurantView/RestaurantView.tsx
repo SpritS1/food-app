@@ -20,6 +20,7 @@ import ReviewsModal from "./Modals/ReviewsModal";
 import dayjs from "dayjs";
 import Section from "./Section";
 import CreateReservationModal from "./Modals/CreateReservationModal";
+import { useAuth } from "../../contexts/AuthContext";
 
 type Props = { restaurant: Restaurant; ownerView?: boolean };
 
@@ -38,6 +39,8 @@ function getRestaurantQualityText(rating: number): string {
 }
 
 const RestaurantView = ({ restaurant, ownerView }: Props) => {
+  const auth = useAuth();
+
   const {
     visible: addModalVisible,
     hideModal: hideAddModal,
@@ -155,7 +158,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   variant="outlined"
                   icon={<FontAwesome5 name="pen" />}
                   onPress={showAddModal}
-                  disabled={ownerView}
+                  disabled={ownerView || !auth.userData}
                 >
                   Write a review
                 </Button>
@@ -190,7 +193,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
           </Stack>
         </ScrollView>
 
-        {!ownerView && (
+        {!ownerView && auth.userData && (
           <Button
             onPress={reservationModal.showModal}
             position="absolute"

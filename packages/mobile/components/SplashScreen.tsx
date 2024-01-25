@@ -12,7 +12,7 @@ const SplashScreen = (props: Props) => {
       justifyContent="center"
       height={"100%"}
     >
-      <Text color={"white"}>Splash screen</Text>
+      <Text color={"white"}>Food Explorer</Text>
     </YStack>
   );
 };
