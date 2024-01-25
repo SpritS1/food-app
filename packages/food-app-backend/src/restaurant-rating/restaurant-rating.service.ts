@@ -39,7 +39,7 @@ export class RestaurantRatingService {
       .find({ restaurantId: restaurantId })
       .populate({
         path: 'user',
-        select: 'email',
+        select: 'name',
       });
 
     const ratingDTOs = ratings.map(
@@ -82,5 +82,29 @@ export class RestaurantRatingService {
       averageRating,
       ratingsCount: ratings.length,
     };
+  }
+
+  async getUserRatings(userId: string): Promise<RestaurantRatingDTO[]> {
+    const ratings = await this.ratingModel
+      .find({ user: userId })
+      .populate({
+        path: 'user',
+        select: 'name',
+      })
+      .populate({ path: 'restaurantId' });
+
+    const ratingDTOs = ratings.map(
+      (rating) =>
+        ({
+          _id: rating._id,
+          rating: rating.rating,
+          comment: rating.comment,
+          user_name: rating.user.name,
+          createdAt: rating.createdAt,
+          restaurant: rating.restaurantId,
+        }) as RestaurantRatingDTO,
+    );
+
+    return ratingDTOs;
   }
 }

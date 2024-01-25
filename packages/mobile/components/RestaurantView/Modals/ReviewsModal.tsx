@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal } from "react-native";
 import { useQuery } from "react-query";
 import { getResutaurantRatings } from "../../../services/restaurantRatingService";
 import { ScrollView, Stack, XStack, YStack } from "tamagui";
 import { Text } from "tamagui";
 import dayjs from "dayjs";
+import ReviewCard from "../../ReviewCard";
 
 type Props = {
   visible: boolean;
@@ -22,6 +23,11 @@ const ReviewsModal = ({
   const query = useQuery(["restaurant reviews", restaurantId], () =>
     getResutaurantRatings(restaurantId)
   );
+
+  useEffect(() => {
+    if (visible) query.refetch();
+  }, [visible]);
+
   return (
     <Modal
       presentationStyle="pageSheet"
@@ -40,33 +46,10 @@ const ReviewsModal = ({
           Reviews
         </Text>
 
-        <ScrollView>
+        <ScrollView space>
           {query.data &&
             query.data.map((review) => (
-              <Stack
-                key={review._id}
-                backgroundColor="$background"
-                padding="$4"
-                borderRadius={"$4"}
-                space
-              >
-                <XStack justifyContent="space-between" width="100%">
-                  <YStack>
-                    <Text fontSize={"$6"}>{review.user_name}</Text>
-                    <Text fontSize={"$4"} color={"$color11"}>
-                      {dayjs(review.createdAt).format("DD-MM-YYYY")}
-                    </Text>
-                  </YStack>
-                  <Text fontSize={"$8"} color="orange">
-                    {review.rating}
-                    <Text color="$color">/</Text>
-                    <Text fontSize={"$6"} color="$color">
-                      10
-                    </Text>
-                  </Text>
-                </XStack>
-                <Text>{review.comment}</Text>
-              </Stack>
+              <ReviewCard review={review} key={review._id} />
             ))}
         </ScrollView>
       </Stack>

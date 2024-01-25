@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import { Restaurant } from 'src/schemas/restaurant.schema';
 
 export type RestaurantRatingDTO = {
   _id: Types.ObjectId;
@@ -6,4 +7,5 @@ export type RestaurantRatingDTO = {
   rating: number;
   comment: string;
   createdAt: Date;
+  restaurant: Restaurant;
 };

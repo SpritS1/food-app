@@ -25,6 +25,9 @@ export class User {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Restaurant' }] })
   favoriteRestaurants: Types.ObjectId[];
+
+  @Prop({ required: true })
+  phone: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -12,6 +12,20 @@ type Props = {
   isFavourite?: boolean;
 };
 
+function getRestaurantQualityText(rating: number): string {
+  if (rating <= 0) return "No reviews yet";
+
+  if (rating <= 3) return "Poor";
+
+  if (rating <= 6) return "Average";
+
+  if (rating <= 8) return "Good";
+
+  if (rating <= 9) return "Excellent";
+
+  return "Awesome";
+}
+
 const ClientRestaurantCard = ({
   restaurant,
   onPress,
@@ -47,7 +61,7 @@ const ClientRestaurantCard = ({
             borderRadius="$4"
           />
         </Stack>
-        <XStack>
+        <XStack space>
           <YStack space="$2" flex={1}>
             <Text fontSize={"$8"} fontWeight={"700"}>
               {restaurant.name}
@@ -67,12 +81,14 @@ const ClientRestaurantCard = ({
               <Text textAlign="center" fontSize={"$8"}>
                 {restaurant.ratingInfo.ratingsCount == 0
                   ? "-"
-                  : restaurant.ratingInfo.averageRating}
+                  : restaurant.ratingInfo.averageRating.toFixed(0)}
               </Text>
             </Stack>
 
             <YStack space="$1">
-              <Text fontSize="$1">Outstanding</Text>
+              <Text fontSize="$1">
+                {getRestaurantQualityText(restaurant.ratingInfo.averageRating)}
+              </Text>
               <Text alignSelf="flex-end" color={"$gray10"} fontSize="$1">
                 ({restaurant.ratingInfo.ratingsCount})
               </Text>

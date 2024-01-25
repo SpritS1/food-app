@@ -128,7 +128,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   <Text fontSize={"$8"}>
                     {restaurant?.ratingInfo?.ratingsCount == 0
                       ? "-"
-                      : restaurant.ratingInfo.averageRating}
+                      : restaurant.ratingInfo.averageRating.toFixed(0)}
                   </Text>
                 </XStack>
 

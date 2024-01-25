@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Req,
   Res,
@@ -14,6 +16,10 @@ import { OwnershipGuard } from 'src/auth/guards/ownership.guard';
 import { Restaurant } from 'src/schemas/restaurant.schema';
 import { Reservation } from 'src/schemas/reservation.schema';
 import { ReservationService } from 'src/reservation/reservation.service';
+import { User } from 'src/schemas/user.schema';
+import { UpdateUserDTO } from './dto/update-user.dto';
+import { RestaurantRating } from 'src/schemas/restaurantRating.schema';
+import { RestaurantRatingDTO } from 'src/restaurant-rating/dto/get-rating.dto';
 
 @Controller('users')
 export class UsersController {
@@ -101,5 +107,22 @@ export class UsersController {
     @Param('id') userId: string,
   ): Promise<Reservation[]> {
     return await this.reservationService.getOwnerReservations(userId);
+  }
+
+  @UseGuards(OwnershipGuard)
+  @Patch(':id')
+  async updateUser(
+    @Param('id') userId: string,
+    @Body() updateUserDTO: UpdateUserDTO,
+  ): Promise<User> {
+    return await this.usersService.update(userId, updateUserDTO);
+  }
+
+  @UseGuards(OwnershipGuard)
+  @Get(':id/reviews')
+  async getUserReviews(
+    @Param('id') userId: string,
+  ): Promise<RestaurantRatingDTO[]> {
+    return await this.usersService.getUserReviews(userId);
   }
 }

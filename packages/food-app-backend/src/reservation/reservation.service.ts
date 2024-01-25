@@ -92,8 +92,6 @@ export class ReservationService {
       .populate('restaurant')
       .sort({ reservationDate: 'desc' });
 
-    console.log(reservations);
-
     return reservations;
   }
 }
