@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Stack, useTheme } from "tamagui";
 import { GestureResponderEvent } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -63,6 +63,10 @@ const FavButton = ({
   const theme = useTheme();
 
   const [isFavourite, setIsFavourite] = useState(initialFavoriteStatus);
+
+  useEffect(() => {
+    setIsFavourite(initialFavoriteStatus);
+  }, [initialFavoriteStatus]);
 
   const addFavMutation = useMutation(addToFavourites, {
     onSuccess: () => setIsFavourite(true),
