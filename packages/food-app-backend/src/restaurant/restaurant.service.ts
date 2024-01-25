@@ -36,6 +36,24 @@ export class RestaurantService {
     return await newRestaurant.save();
   }
 
+  @Roles(Role.BusinessOwner)
+  async addImage(id: ObjectId, newImage: Express.Multer.File) {
+    const restaurant = await this.restaurantModel.findById(id);
+
+    restaurant.images.push(`/uploads/${newImage.filename}`);
+
+    return await restaurant.save();
+  }
+
+  @Roles(Role.BusinessOwner)
+  async removeImage(id: ObjectId, imageIndex: number) {
+    const restaurant = await this.restaurantModel.findById(id);
+
+    restaurant.images.splice(imageIndex, 1);
+
+    return await restaurant.save();
+  }
+
   async findAll(filters?: { name?: string; city?: string; cuisine?: string }) {
     const query: any = {};
 

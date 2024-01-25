@@ -16,6 +16,7 @@ import EditOpeningHoursModal from "./EditOpeningHoursModal";
 import { useMutation } from "react-query";
 import { removeRestaurant } from "../../services/restaurantService";
 import { router } from "expo-router";
+import ManageImages from "./ManageImages";
 
 type Props = {
   visible: boolean;
@@ -37,6 +38,8 @@ const EditRestaurantModal = ({
   } = useModal();
 
   const hoursModal = useModal();
+
+  const imagesModal = useModal();
 
   const removeMutation = useMutation(removeRestaurant);
 
@@ -72,14 +75,18 @@ const EditRestaurantModal = ({
                 </Stack>
 
                 <MenuItem text="Edit data" icon="edit" onPress={showEditData} />
-                <MenuItem text="Edit images" icon="images" />
+                <MenuItem
+                  text="Edit images"
+                  icon="images"
+                  onPress={imagesModal.showModal}
+                />
                 <MenuItem
                   text="Edit opening hours"
                   icon="clock"
                   onPress={hoursModal.showModal}
                 />
-                <MenuItem text="Edit menu" icon="utensils" />
-                <MenuItem text="Hide" icon="eye-slash" />
+                {/* <MenuItem text="Edit menu" icon="utensils" />
+                <MenuItem text="Hide" icon="eye-slash" /> */}
                 <MenuItem
                   text="Delete"
                   icon="trash"
@@ -107,6 +114,13 @@ const EditRestaurantModal = ({
           visible={hoursModal.visible}
           onHide={hoursModal.hideModal}
           restaurantId={restaurant._id}
+        />
+
+        <ManageImages
+          visible={imagesModal.visible}
+          onHide={imagesModal.hideModal}
+          restaurant={restaurant}
+          refetchRestaurant={onEditSuccess}
         />
       </>
     </Modal>

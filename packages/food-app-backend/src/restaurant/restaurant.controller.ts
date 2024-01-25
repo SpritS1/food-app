@@ -92,7 +92,24 @@ export class RestaurantController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: ObjectId) {
-    return this.restaurantService.remove(id);
+  async remove(@Param('id') id: ObjectId) {
+    return await this.restaurantService.remove(id);
+  }
+
+  @Post(':id/addImage')
+  @UseInterceptors(FileInterceptor('newImage'))
+  async addImage(
+    @Param('id') id: ObjectId,
+    @UploadedFile() newImage: Express.Multer.File,
+  ) {
+    return await this.restaurantService.addImage(id, newImage);
+  }
+
+  @Delete(':restaurantId/image/:imageIndex')
+  async removeImage(
+    @Param('restaurantId') id: ObjectId,
+    @Param('imageIndex') imageIndex: number,
+  ) {
+    return await this.restaurantService.removeImage(id, imageIndex);
   }
 }
