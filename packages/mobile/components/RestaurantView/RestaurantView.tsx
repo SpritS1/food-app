@@ -97,7 +97,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
 
             <InfoItem text={`${restaurant?.city}`} iconName="map-marker-alt" />
             <InfoItem text={restaurant?.cuisine.name} iconName="utensils" />
-            <InfoItem text={"Average price 85 $"} iconName="money-bill" />
+            {/* <InfoItem text={"Average price 85 $"} iconName="money-bill" /> */}
 
             <Divider />
 

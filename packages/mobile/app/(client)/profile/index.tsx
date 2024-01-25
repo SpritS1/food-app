@@ -18,9 +18,9 @@ import {
   LogOut,
 } from "@tamagui/lucide-icons";
 import { Link, useRouter } from "expo-router";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
-export default function TabTwoScreen() {
+export default function ProfileScreen() {
   const router = useRouter();
   const auth = useAuth();
 
@@ -56,27 +56,30 @@ export default function TabTwoScreen() {
           <Separator />
 
           <YGroup.Item>
-            <ListItem
-              color="orange"
-              hoverTheme
-              pressTheme
-              icon={User}
-              title="Personal data"
-              size="$5"
-              disabled={notLoggedIn}
-            />
+            <Link href="/(client)/profile/settings" asChild>
+              <ListItem
+                size="$5"
+                hoverTheme
+                pressTheme
+                icon={Settings}
+                title="Settings"
+                disabled={notLoggedIn}
+              />
+            </Link>
           </YGroup.Item>
           <YGroup.Item>
-            <ListItem
-              hoverTheme
-              pressTheme
-              icon={Star}
-              title="My reviews"
-              size="$5"
-              disabled={notLoggedIn}
-            />
+            <Link href="/(client)/profile/reviews" asChild>
+              <ListItem
+                hoverTheme
+                pressTheme
+                icon={Star}
+                title="My reviews"
+                size="$5"
+                disabled={notLoggedIn}
+              />
+            </Link>
           </YGroup.Item>
-          <YGroup.Item>
+          {/* <YGroup.Item>
             <ListItem
               hoverTheme
               pressTheme
@@ -95,7 +98,7 @@ export default function TabTwoScreen() {
               title="Settings"
               disabled={notLoggedIn}
             />
-          </YGroup.Item>
+          </YGroup.Item> */}
           <YGroup.Item>
             <ListItem
               onPress={handleAccountTypeChange}
@@ -124,20 +127,3 @@ export default function TabTwoScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});

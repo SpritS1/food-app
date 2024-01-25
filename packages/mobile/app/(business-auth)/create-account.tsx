@@ -103,7 +103,9 @@ const CreateAccount = (props: Props) => {
 
         <YStack alignItems="center" gap="$2" marginTop="auto">
           <Text>Already have an account?</Text>
-          <Link href="/(business-auth)/login">Sign in</Link>
+          <Link href="/(business-auth)/login">
+            <Text>Sign in</Text>
+          </Link>
         </YStack>
       </YStack>
     </SafeAreaView>
