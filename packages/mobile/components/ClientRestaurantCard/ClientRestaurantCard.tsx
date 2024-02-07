@@ -62,14 +62,14 @@ const ClientRestaurantCard = ({
             borderRadius="$4"
           />
         </Stack>
-        <XStack space>
+        <XStack space minWidth={300}>
           <YStack space="$2" flex={1}>
             <Text fontSize={"$8"} fontWeight={"700"}>
               {restaurant.name}
             </Text>
             <Text>
               {restaurant.city}{" "}
-              {restaurant.address ? `,${restaurant.address}` : ""}
+              {restaurant.address ? `, ${restaurant.address}` : ""}
             </Text>
           </YStack>
           <Stack alignItems="center" space="$2">

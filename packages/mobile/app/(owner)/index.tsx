@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native";
 import React from "react";
-import { YStack, Text, Button } from "tamagui";
+import { YStack, Text, Button, Stack } from "tamagui";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "react-query";
 import { getUserReservations } from "../../services/userService";
@@ -33,7 +33,17 @@ export default function OwnerHomeScreen() {
               (reservation) =>
                 !reservation.isCancelled && !reservation.isConfirmed
             ) ? (
-              <Text fontSize="$5">You have new reservations to confirm!</Text>
+              <Stack space>
+                <Text fontSize="$5">You have new reservations to confirm!</Text>
+                <Button
+                  hoverTheme
+                  pressTheme
+                  color="orange"
+                  onPress={() => router.push("/(owner)/reservations")}
+                >
+                  Reservations
+                </Button>
+              </Stack>
             ) : (
               <Text fontSize="$5">
                 You have no new reservations to confirm.

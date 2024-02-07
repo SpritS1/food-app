@@ -75,8 +75,8 @@ export default function ClientHomeScreen() {
             (reservation) =>
               reservation.isConfirmed &&
               !reservation.isCancelled &&
-              dayjs(reservation.reservationDate).diff(dayjs(), "day") < 3 &&
-              dayjs(reservation.reservationDate).diff(dayjs(), "day") >= 0
+              dayjs(reservation.reservationDate).isAfter(dayjs()) &&
+              dayjs(reservation.reservationDate).diff(dayjs(), "day") < 3
           ) && (
             <YStack space>
               <Text fontSize="$6">You have upcoming reservations!</Text>
@@ -87,10 +87,9 @@ export default function ClientHomeScreen() {
                     return (
                       reservation.isConfirmed &&
                       !reservation.isCancelled &&
+                      dayjs(reservation.reservationDate).isAfter(dayjs()) &&
                       dayjs(reservation.reservationDate).diff(dayjs(), "day") <
-                        3 &&
-                      dayjs(reservation.reservationDate).diff(dayjs(), "day") >=
-                        0
+                        3
                     );
                   })
                   .map((reservation) => (

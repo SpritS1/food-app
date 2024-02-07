@@ -15,7 +15,7 @@ const StartScreen = (props: Props) => {
   const { initialized, authToken, accountType } = useAuth();
 
   const onLayoutRootView = useCallback(async () => {
-    // LogBox.ignoreAllLogs();
+    LogBox.ignoreAllLogs();
     if (initialized) {
       if (authToken) {
         if (accountType === "business") router.replace("/(owner)");
