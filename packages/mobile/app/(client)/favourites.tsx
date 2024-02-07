@@ -23,20 +23,22 @@ const favourites = (props: Props) => {
   if (!auth.userData?.userId) {
     return (
       <SafeAreaView>
-        <Text fontSize={"$8"}>Favourites</Text>
+        <Stack padding="$4" space>
+          <Text fontSize={"$8"}>Favourites</Text>
 
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          height={"100%"}
-          space
-        >
-          <Text fontSize="$8" textAlign="center">
-            You must be logged in to view your favourites
-          </Text>
-          <Link href="/sign-in" asChild>
-            <Button>Sign in</Button>
-          </Link>
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            height={"100%"}
+            space
+          >
+            <Text fontSize="$8" textAlign="center">
+              You must be logged in to view your favourites
+            </Text>
+            <Link href="/sign-in" asChild>
+              <Button>Sign in</Button>
+            </Link>
+          </Stack>
         </Stack>
       </SafeAreaView>
     );

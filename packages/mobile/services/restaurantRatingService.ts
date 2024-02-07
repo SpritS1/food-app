@@ -15,3 +15,7 @@ export const getResutaurantRatings = async (restaurantId: string) => {
 
   return res.data;
 };
+
+export const updateRestaurantRating = async (rating: RestaurantRating) => {
+  await axios.patch(`/restaurant-rating/${rating._id}`, rating);
+};

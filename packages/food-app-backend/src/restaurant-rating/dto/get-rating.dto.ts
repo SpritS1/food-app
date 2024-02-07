@@ -8,4 +8,5 @@ export type RestaurantRatingDTO = {
   comment: string;
   createdAt: Date;
   restaurant: Restaurant;
+  ownerReply: string;
 };

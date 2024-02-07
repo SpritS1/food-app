@@ -21,6 +21,9 @@ export class RestaurantRating {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+
+  @Prop({ default: '' })
+  ownerReply: string;
 }
 
 export const RestaurantRatingSchema =

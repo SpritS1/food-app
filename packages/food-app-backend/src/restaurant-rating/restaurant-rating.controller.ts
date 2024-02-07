@@ -7,10 +7,12 @@ import {
   Delete,
   HttpStatus,
   Res,
+  Patch,
 } from '@nestjs/common';
 import { RestaurantRatingService } from './restaurant-rating.service';
 import { CreateRestaurantRatingDto } from './dto/create-restaurant-rating.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { UpdateRestaurantRatingDto } from './dto/update-restaurant-rating.dto';
 
 @Controller('restaurant-rating')
 export class RestaurantRatingController {
@@ -52,5 +54,16 @@ export class RestaurantRatingController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.restaurantRatingService.remove(+id);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateRestaurantRatingDto: UpdateRestaurantRatingDto,
+  ) {
+    return await this.restaurantRatingService.updateRating(
+      id,
+      updateRestaurantRatingDto,
+    );
   }
 }

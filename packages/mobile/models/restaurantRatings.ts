@@ -7,4 +7,5 @@ export type RestaurantRating = {
   comment: string;
   createdAt: Date;
   restaurant: Restaurant;
+  ownerReply?: string;
 };

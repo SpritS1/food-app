@@ -12,6 +12,7 @@ type Props = {
   onHide: () => void;
   onAddSuccess: () => void;
   restaurantId: string;
+  ownerView: boolean;
 };
 
 const ReviewsModal = ({
@@ -19,6 +20,7 @@ const ReviewsModal = ({
   onHide,
   onAddSuccess,
   restaurantId,
+  ownerView,
 }: Props) => {
   const query = useQuery(["restaurant reviews", restaurantId], () =>
     getResutaurantRatings(restaurantId)
@@ -49,7 +51,12 @@ const ReviewsModal = ({
         <ScrollView space>
           {query.data &&
             query.data.map((review) => (
-              <ReviewCard review={review} key={review._id} />
+              <ReviewCard
+                review={review}
+                key={review._id}
+                ownerView={ownerView}
+                refetchData={query.refetch}
+              />
             ))}
         </ScrollView>
       </Stack>

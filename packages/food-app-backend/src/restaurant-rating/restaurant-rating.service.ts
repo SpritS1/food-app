@@ -6,6 +6,7 @@ import { Model, Types } from 'mongoose';
 import { RestaurantRating } from 'src/schemas/restaurantRating.schema';
 import { RestaurantRatingDTO } from './dto/get-rating.dto';
 import { RatingInfo } from './utils/ratingInfo';
+import { UpdateRestaurantRatingDto } from './dto/update-restaurant-rating.dto';
 
 @Injectable()
 export class RestaurantRatingService {
@@ -50,6 +51,7 @@ export class RestaurantRatingService {
           comment: rating.comment,
           user_name: rating.user.name,
           createdAt: rating.createdAt,
+          ownerReply: rating.ownerReply,
         }) as RestaurantRatingDTO,
     );
 
@@ -106,5 +108,21 @@ export class RestaurantRatingService {
     );
 
     return ratingDTOs;
+  }
+
+  async updateRating(ratingId: string, updateDto: UpdateRestaurantRatingDto) {
+    const { rating, comment, ownerReply } = updateDto;
+
+    const updatedRating = await this.ratingModel.findByIdAndUpdate(ratingId, {
+      rating,
+      comment,
+      ownerReply,
+    });
+
+    if (!updatedRating) {
+      throw new Error('Rating not found');
+    }
+
+    return 'Rating updated successfully';
   }
 }

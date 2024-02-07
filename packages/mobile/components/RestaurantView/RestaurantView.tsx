@@ -38,7 +38,7 @@ function getRestaurantQualityText(rating: number): string {
   return "Awesome";
 }
 
-const RestaurantView = ({ restaurant, ownerView }: Props) => {
+const RestaurantView = ({ restaurant, ownerView = false }: Props) => {
   const auth = useAuth();
 
   const {
@@ -62,6 +62,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
         onHide={hideReviewsModal}
         visible={reviewsModalVisible}
         restaurantId={restaurant._id}
+        ownerView={ownerView}
       />
 
       <AddReviewModal
@@ -159,6 +160,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   icon={<FontAwesome5 name="pen" />}
                   onPress={showAddModal}
                   disabled={ownerView || !auth.userData}
+                  opacity={ownerView || !auth.userData ? 0.5 : 1}
                 >
                   Write a review
                 </Button>
@@ -168,6 +170,7 @@ const RestaurantView = ({ restaurant, ownerView }: Props) => {
                   variant="outlined"
                   onPress={showReviewsModal}
                   disabled={restaurant.ratingInfo.ratingsCount === 0}
+                  opacity={restaurant.ratingInfo.ratingsCount === 0 ? 0.5 : 1}
                 >
                   Read the reviews
                 </Button>
