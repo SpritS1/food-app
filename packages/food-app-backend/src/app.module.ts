@@ -23,16 +23,14 @@ import * as path from 'path';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      'mongodb+srv://mateuszpenkala:YVGO0xCtXDjQmIfh@foodapp.sn7cfrx.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
     UsersModule,
     RestaurantModule,
     JwtModule.register({ secret: process.env.JWT_SECRET }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '..', '..', '..', 'uploads'), // Set the static files location
-      serveRoot: '/uploads', // Map the files under a routes
+      rootPath: path.join(__dirname, '..', '..', '..', 'uploads'), // Static files location
+      serveRoot: '/uploads',
     }),
     LocationModule,
     CuisineModule,

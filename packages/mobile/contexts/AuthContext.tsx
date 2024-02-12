@@ -18,7 +18,6 @@ interface AuthContextProps {
   login: (values: LoginValues) => Promise<boolean>;
   register: (values: RegisterValues) => Promise<boolean>;
   logout: () => Promise<void>;
-  checkEmail: (email: string, accountType: AccountType) => Promise<boolean>;
   userData: AuthTokenPayload | null;
   initialized: boolean;
   accountType: AccountType | null;
@@ -113,35 +112,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   );
 
-  const checkEmail: (
-    email: string,
-    accountType: AccountType
-  ) => Promise<boolean> = async (email: string, accountType: AccountType) => {
-    try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/auth/check-email`,
-        {
-          params: {
-            email,
-            accountType,
-          },
-        }
-      );
-
-      const isAccountCreated = response.data;
-
-      return isAccountCreated;
-    } catch (error) {
-      console.error("Email check failed", error);
-
-      alert(
-        "An error occurred while checking the email. Please try again later."
-      );
-
-      return false;
-    }
-  };
-
   const login: (values: LoginValues) => Promise<boolean> = async (
     values: LoginValues
   ) => {
@@ -165,7 +135,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Dodać zwracanie wartosci boolean i obsluzyc bledy na froncie
   const register: (values: RegisterValues) => Promise<boolean> = async (
     values
   ) => {
@@ -176,7 +145,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       );
 
       if (response.status === HttpStatusCode.Created) {
-        console.log(`Response data: ${response.data}`);
         await saveAuthToken(response.data.accessToken);
         return true;
       }
@@ -201,7 +169,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     logout,
     register,
-    checkEmail,
     accountType,
   };
 

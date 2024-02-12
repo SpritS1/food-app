@@ -31,9 +31,9 @@ export default function ProfileScreen() {
     router.replace("/");
   };
 
-  const handleMyReviewsPress = () => {
-    router.push("/(client)/profile/reviews");
-  };
+  // const handleMyReviewsPress = () => {
+  //   router.push("/(client)/profile/reviews");
+  // };
 
   return (
     <SafeAreaView>
@@ -72,15 +72,17 @@ export default function ProfileScreen() {
             </Link>
           </YGroup.Item> */}
           <YGroup.Item>
-            <ListItem
-              hoverTheme
-              pressTheme
-              icon={Star}
-              title="My reviews"
-              size="$5"
-              disabled={!loggedIn}
-              onPress={handleMyReviewsPress}
-            />
+            <Link asChild href={"/(client)/profile/reviews"}>
+              <ListItem
+                hoverTheme
+                pressTheme
+                icon={Star}
+                title="My reviews"
+                size="$5"
+                disabled={!loggedIn}
+                // onPress={handleMyReviewsPress}
+              />
+            </Link>
           </YGroup.Item>
           {/* <YGroup.Item>
             <ListItem

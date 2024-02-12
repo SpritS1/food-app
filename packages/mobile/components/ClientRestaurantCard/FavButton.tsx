@@ -22,7 +22,6 @@ const addToFavourites = async ({
       throw new Error(response.data.message || "Error adding to favorites");
     }
   } catch (error) {
-    // Handle or rethrow the error as per your application's error handling logic
     throw error;
   }
 };

@@ -18,7 +18,6 @@ import { Reservation } from 'src/schemas/reservation.schema';
 import { ReservationService } from 'src/reservation/reservation.service';
 import { User } from 'src/schemas/user.schema';
 import { UpdateUserDTO } from './dto/update-user.dto';
-import { RestaurantRating } from 'src/schemas/restaurantRating.schema';
 import { RestaurantRatingDTO } from 'src/restaurant-rating/dto/get-rating.dto';
 
 @Controller('users')
