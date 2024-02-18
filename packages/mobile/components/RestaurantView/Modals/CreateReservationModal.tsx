@@ -50,15 +50,26 @@ const CreateReservationModal = ({ visible, onHide, restaurant }: Props) => {
           const dayName: DaysOfWeek = selectedDate.format("dddd") as DaysOfWeek;
           const hours = restaurant.openingHours[dayName];
 
-          const openHours = dayjs(hours.open).set("date", selectedDate.date());
-          const closeHours = dayjs(hours.close).set(
-            "date",
-            selectedDate.date()
-          );
+          // const openHours = dayjs(hours.open).set("date", selectedDate.date());
+          // const closeHours = dayjs(hours.close).set(
+          //   "date",
+          //   selectedDate.date()
+          // );
+
+          const openHours = dayjs(hours.open)
+            .set("date", selectedDate.date())
+            .set("month", selectedDate.month())
+            .set("year", selectedDate.year());
+          const closeHours = dayjs(hours.close)
+            .set("date", selectedDate.date())
+            .set("month", selectedDate.month())
+            .set("year", selectedDate.year());
 
           const isCorrect: boolean =
             selectedDate.isAfter(openHours) &&
             selectedDate.isBefore(closeHours);
+
+          console.log(`isCorrect: ${isCorrect}`);
 
           return isCorrect;
         }
@@ -71,7 +82,7 @@ const CreateReservationModal = ({ visible, onHide, restaurant }: Props) => {
   });
 
   const mutation = useMutation(
-    `newReservation-${auth.userData?.userId}-${dayjs().toISOString()}`,
+    `newReservation-${auth?.userData?.userId}-${dayjs().toISOString()}`,
     createReservation,
     {
       onSuccess: () => {
@@ -166,6 +177,7 @@ const CreateReservationModal = ({ visible, onHide, restaurant }: Props) => {
               <Text fontSize="$5">Reservation date and time</Text>
 
               <DateTimePicker
+                testID="dateTimePicker"
                 themeVariant="dark"
                 value={values.reservationDate}
                 mode="datetime"
