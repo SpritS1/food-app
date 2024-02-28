@@ -44,8 +44,7 @@ const ManageImages = ({
   };
 
   const handleRemovePress = async () => {
-    if (!selectedImageIndex) return;
-
+    if (selectedImageIndex === null) return;
     await removeMutation.mutateAsync({
       restaurantId: restaurant._id,
       imageIndex: selectedImageIndex,
