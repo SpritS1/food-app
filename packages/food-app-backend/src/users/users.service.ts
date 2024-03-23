@@ -22,6 +22,7 @@ export class UsersService {
 
   async getRestaurantsByUserId(userId: string): Promise<Restaurant[]> {
     const restaurants = await this.restaurantModel.find({ owner: userId });
+    console.log(userId);
     return restaurants;
   }
 

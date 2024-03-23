@@ -46,18 +46,19 @@ export class RestaurantController {
   @Roles(Role.BusinessOwner)
   @UseInterceptors(FileInterceptor('mainImage'))
   @Post()
-  create(
+  async create(
     @UploadedFile() mainImage: Express.Multer.File,
     @Body() createRestaurantDto: CreateRestaurantDto,
     @Req() req,
   ) {
     const userId: ObjectId = req.user.userId;
-
-    return this.restaurantService.create(
+    console.log(mainImage);
+    const restaurant = await this.restaurantService.create(
       createRestaurantDto,
       userId,
       mainImage,
     );
+    return restaurant;
   }
 
   @Roles(Role.BusinessOwner)

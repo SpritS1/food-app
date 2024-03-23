@@ -59,7 +59,7 @@ export class AuthService {
         email,
         password: hashedPassword,
         roles,
-        name,
+        name: 'John',
       });
 
       await newUser.save();

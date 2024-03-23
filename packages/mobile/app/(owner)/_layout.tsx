@@ -54,6 +54,7 @@ export default function OwnerLayout() {
             <Ionicons name="restaurant" size={24} color={color} />
           ),
           headerShown: false,
+          unmountOnBlur: true,
         }}
       />
 
@@ -65,17 +66,9 @@ export default function OwnerLayout() {
             <Ionicons name="book" size={24} color={color} />
           ),
           headerShown: false,
+          unmountOnBlur: true,
         }}
       />
-
-      {/* <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
-          headerShown: false,
-        }}
-      /> */}
     </Tabs>
   );
 }
